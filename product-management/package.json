@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon --inspect index.js",
+    "start": "npx nodemon index.js",
+    "dev": "npx nodemon --inspect=9230 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "pug": "^3.0.3"
   },
