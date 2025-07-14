@@ -1,30 +1,18 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+
 block main
   .product-page
     +box-head("Danh sách sản phẩm")
 
     .product-list
-      .product-card
-        img(src="/images/laptop.png", alt="Laptop Dell")
-        h3 Laptop Dell
-        p Cấu hình mạnh mẽ, thiết kế sang trọng.
-        p.price Giá: 20.000.000 VNĐ
-
-      .product-card
-        img(src="/images/mouse.png", alt="Chuột Logitech")
-        h3 Chuột Logitech
-        p Không dây, độ chính xác cao.
-        p.price Giá: 500.000 VNĐ
-
-      .product-card
-        img(src="/images/keyboard.png", alt="Bàn phím cơ")
-        h3 Bàn phím cơ
-        p Gõ sướng tay, led RGB.
-        p.price Giá: 1.200.000 VNĐ
-
-      .product-card
-        img(src="/images/monitor.png", alt="Màn hình LG")
-        h3 Màn hình LG 24 inch
-        p Full HD, tấm nền IPS.
-        p.price Giá: 3.500.000 VNĐ
+      if products.length
+        each item in products
+          .product-card
+            img(src=item.thumbnail, alt=item.title)
+            h3= item.title
+            p= item.description
+            p.price-new Giá mới: #{item.newPrice.toLocaleString()} VNĐ
+            p.price-old Giá cũ: #{item.price.toLocaleString()} VNĐ
+      else
+        p Không có sản phẩm nào.

@@ -1,17 +1,22 @@
-const express = require('express')
-require('dotenv').config();
+const express = require("express");
+require("dotenv").config();
 
-const router = require("./routers/client/index.router")
+const database = require("./config/database");
 
-const app = express()
+const router = require("./routers/client/index.router");
+const { connect } = require("mongoose");
+
+database.connect();
+
+const app = express();
 const port = process.env.PORT;
 
-app.set('views', './views')
-app.set('view engine', 'pug')
-app.use(express.static('public'));
+app.set("views", "./views");
+app.set("view engine", "pug");
+app.use(express.static("public"));
 //router
 router(app);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
