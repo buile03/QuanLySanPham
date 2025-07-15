@@ -1,0 +1,91 @@
+extends ../../layouts/default
+
+block main
+  h1.mb-4.text-primary Trang danh sách sản phẩm
+
+  .row.mb-3.align-items-center
+
+  
+    //- Dùng AJAX để load lại trang, phù hợp với giao diện người dùng hơn 
+
+    .col-md-6
+      div
+        span.mr-2.text-muted Trạng thái:
+        each status in filterStatus
+          button.btn.btn-sm.mr-1(
+            class=((!query.status && status.status === "") || query.status === status.status ? 'btn-primary' : 'btn-outline-primary'),
+            button-status=status.status
+          )= status.name
+    .col-md-6
+      form(id="form-search")
+        input(type="hidden", name="status", value=query.status || "")
+        .input-group
+          input.form-control(type="text", name="keyword", placeholder="Tìm sản phẩm...", value=query.keyword || "")
+          .input-group-append
+            button.btn.btn-success(type="submit") Tìm
+    
+    //- Cách viết dùng các phương thức có sẵn, nhanh gọn hơn 
+    //- .col-md-12 
+    //-   form#filter-form(method="GET")
+    //-     .row.mb-3.align-items-center
+    //-       .col-md-3
+    //-         label.text-muted Trạng thái:
+    //-         select.form-control(name="status")
+    //-           option(value="") Tất cả
+    //-           option(value="active", selected=(query.status == 'active')) Hiển thị
+    //-           option(value="inactive", selected=(query.status == 'inactive')) Ẩn
+    //-       .col-md-4
+    //-         input.form-control(type="text", name="keyword", placeholder="Tìm sản phẩm...", value=query.keyword || "")
+    //-       .col-md-2
+    //-         select.form-control(name="sort")
+    //-           option(value="") Sắp xếp
+    //-           option(value="price-asc", selected=(query.sort == 'price-asc')) Giá tăng dần
+    //-           option(value="price-desc", selected=(query.sort == 'price-desc')) Giá giảm dần
+    //-       .col-md-2
+    //-         button.btn.btn-success.w-100(type="submit") Lọc
+
+  table.table.table-hover.table-bordered.table-sm.align-middle
+    thead.thead-dark
+      tr.text-center
+        th(style="width: 50px") #
+        th(style="width: 60px") Hình
+        th(style="min-width: 150px") Tên sản phẩm
+        th(style="min-width: 200px") Mô tả
+        th Giá
+        th Giảm (%)
+        th Tồn kho
+        th Vị trí
+        th Trạng thái
+        th(style="width: 120px") Thao tác
+    tbody
+      each product, index in products
+        tr
+          td.text-center #{index + 1}
+          td.text-center 
+            img(
+              src=product.thumbnail, 
+              alt="Thumbnail", 
+              class="img-thumbnail", 
+              style="width: 50px; height: 50px; object-fit: cover;"
+            )
+          td #{product.title}
+          td 
+            if product.description.length > 100
+              span(title=product.description)= product.description.substring(0, 100) + '...'
+            else
+              = product.description
+          td #{product.price.toLocaleString()}đ
+          td.text-center #{product.discountPercentage}%
+          td.text-center #{product.stock}
+          td.text-center #{product.position}
+          td.text-center
+            if product.status == 'active'
+              span.badge.badge-success Hiển thị
+            else
+              span.badge.badge-danger Ẩn
+          td.text-center
+            a.btn.btn-sm.btn-outline-warning.mr-1(href=`/admin/products/edit/${product._id}`) Sửa
+            a.btn.btn-sm.btn-outline-danger(
+              href=`/admin/products/delete/${product._id}` 
+              onclick="return confirm('Xác nhận xoá?')"
+            ) Xoá
