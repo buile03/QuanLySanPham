@@ -1,73 +1,47 @@
+/* style.css - Custom Admin Layout */
+
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
 }
 
-/* Bọc toàn bộ layout */
 .wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Header */
-.header {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-}
-
-.header .container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Nội dung chính gồm sidebar và main */
 .content-wrapper {
   display: flex;
   flex: 1;
 }
 
-/* Sidebar */
 .sidebar {
-  width: 200px;
-  background-color: #f0f0f0;
-  padding: 1rem;
-  height: auto;
-  min-height: calc(100vh - 140px); /* Trừ chiều cao header + footer */
+  width: 220px;
+  background-color: #f1f1f1;
+  border-right: 1px solid #dee2e6;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar li {
-  margin: 0.75rem 0;
-}
-
-.sidebar a {
-  text-decoration: none;
+.sidebar .nav-link {
   color: #333;
-  display: block;
 }
 
-.sidebar a:hover {
-  color: #007bff;
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #000;
 }
 
-/* Main content */
+.sidebar .nav-link.text-danger:hover {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
 .main {
-  flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   background-color: #fff;
-  min-height: calc(100vh - 140px); /* trừ header + footer */
+  flex: 1;
 }
 
-/* Footer */
 .footer {
   background-color: #f1f1f1;
-  text-align: center;
-  padding: 1rem;
 }

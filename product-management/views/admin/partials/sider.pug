@@ -1,15 +1,15 @@
-aside.sidebar
+aside.sidebar.bg-light.border-right.p-3(style="width: 220px; min-height: 100vh")
   nav
-    ul
-      li
-        a(href=`${prefixAdmin}/dashboard`) Trang tổng quan
-      li
-        a(href="/admin/products") 🛒 Danh sách sản phẩm
-      li
-        a(href="/admin/categories") 📦 Quản lý danh mục
-      li
-        a(href="/admin/orders") 🧾 Quản lý đơn hàng
-      li
-        a(href="/admin/users") 👤 Quản lý người dùng
-      li
-        a(href="/admin/logout") 🚪 Đăng xuất
+    ul.nav.flex-column
+      li.nav-item
+        a.nav-link(href=`${prefixAdmin}/dashboard`) 📊 Trang tổng quan
+      li.nav-item
+        a.nav-link(href="/admin/products") 🛒 Danh sách sản phẩm
+      li.nav-item
+        a.nav-link(href="/admin/categories") 📦 Quản lý danh mục
+      li.nav-item
+        a.nav-link(href="/admin/orders") 🧾 Quản lý đơn hàng
+      li.nav-item
+        a.nav-link(href="/admin/users") 👤 Quản lý người dùng
+      li.nav-item
+        a.nav-link.text-danger(href="/admin/logout") 🚪 Đăng xuất

@@ -8,13 +8,13 @@ html
     link(rel="stylesheet", href="/admin/css/style.css")
   
   body 
-    .wrapper
+    .wrapper.d-flex.flex-column.min-vh-100
       include ../partials/header.pug
 
-      .content-wrapper
+      .flex-grow-1.d-flex
         include ../partials/sider.pug
 
-        .main
+        .main.flex-grow-1.p-4
           block main
 
       include ../partials/footer.pug    
