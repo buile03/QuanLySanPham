@@ -2,62 +2,92 @@ extends ../../layouts/default
 include ../../mixins/filterStatus
 include ../../mixins/search
 include ../../mixins/pagination
+include ../../mixins/form-change-multi
+
 block main
   h1.mb-4.text-primary Trang danh sách sản phẩm
 
   .row.mb-3.align-items-center
     .col-md-6
-      //- Mixin
       +filter-status(filterStatus)
     .col-md-6
       +search(query.keyword, query.status)
 
-  table.table.table-hover.table-bordered.table-sm.align-middle
-    thead.thead-dark
-      tr.text-center
-        th(style="width: 50px") #
-        th(style="width: 60px") Hình
-        th(style="min-width: 150px") Tên sản phẩm
-        th(style="min-width: 200px") Mô tả
-        th Giá
-        th Giảm (%)
-        th Tồn kho
-        th Vị trí
-        th Trạng thái
-        th(style="width: 120px") Thao tác
-    tbody
-      each product, index in products
-        tr
-          td.text-center #{index + 1}
-          td.text-center 
-            img(
-              src=product.thumbnail, 
-              alt="Thumbnail", 
-              class="img-thumbnail", 
-              style="width: 50px; height: 50px; object-fit: cover;"
-            )
-          td #{product.title}
-          td 
-            if product.description.length > 100
-              span(title=product.description)= product.description.substring(0, 100) + '...'
-            else
-              = product.description
-          td #{product.price.toLocaleString()}đ
-          td.text-center #{product.discountPercentage}%
-          td.text-center #{product.stock}
-          td.text-center #{product.position}
-          td.text-center
-            if product.status == 'active'
-              span.badge.badge-success Hiển thị
-            else
-              span.badge.badge-danger Ẩn
-          td.text-center
-            a.btn.btn-sm.btn-outline-warning.mr-1(href=`/admin/products/edit/${product._id}`) Sửa
-            a.btn.btn-sm.btn-outline-danger(
-              href=`/admin/products/delete/${product._id}` 
-              onclick="return confirm('Xác nhận xoá?')"
-            ) Xoá
- 
 
-  //- Phân trang
+
+  +form-change-multi(`${prefixAdmin}/products/change-multi`)
+    table.table.table-hover.table-bordered.table-sm.align-middle
+      thead.thead-dark
+        tr.text-center
+          th(style="width: 50px")
+            input(type="checkbox", name="checkall")
+          th(style="width: 60px") Hình
+          th(style="min-width: 150px") Tên sản phẩm
+          th(style="min-width: 200px") Mô tả
+          th Giá
+          th Giảm (%)
+          th Tồn kho
+          th Vị trí
+          th Trạng thái
+          th(style="width: 120px") Thao tác
+      tbody
+        each product, index in products
+          tr
+            td.text-center 
+              input(type="checkbox", name="id", value=product._id)
+            td.text-center 
+              img(
+                src=product.thumbnail, 
+                alt="Thumbnail", 
+                class="img-thumbnail", 
+                style="width: 50px; height: 50px; object-fit: cover;"
+              )
+            td #{product.title}
+            td 
+              if product.description.length > 100
+                span(title=product.description)= product.description.substring(0, 100) + '...'
+              else
+                = product.description
+            td #{product.price.toLocaleString()}đ
+            td.text-center #{product.discountPercentage}%
+            td.text-center #{product.stock}
+            td.text-center #{product.position}
+            td.text-center
+              if(product.status == "active")
+                a(
+                  href="javascript:;",
+                  data-status="active",
+                  data-id=product._id, 
+                  button-change-status="",  
+                  class="badge badge-success"
+                ) Hiển thị
+              else 
+                a(
+                  href="javascript:;",
+                  data-status="inactive",
+                  data-id=product._id,
+                  button-change-status="",
+                  class="badge badge-danger"
+                ) Ẩn
+            td.text-center
+              a.btn.btn-sm.btn-outline-warning.mr-1(href=`/admin/products/edit/${product._id}`) Sửa
+              a.btn.btn-sm.btn-outline-danger(
+                href=`/admin/products/delete/${product._id}` 
+                onclick="return confirm('Xác nhận xoá?')"
+              ) Xoá
+
+
+
   +pagination(pagination)
+
+  form( 
+    action="", 
+    method="POST",  
+    id="form-change-status",
+    data-path=`${prefixAdmin}/products/change-status`
+  )
+    input(type="hidden", name="_method", value="PATCH")
+    input(type="hidden", name="redirect", id="redirect-input")
+
+  script(src="/admin/js/product.js")
+  script(src="/admin/js/script.js")

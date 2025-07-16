@@ -1,48 +1,61 @@
 // Import thư viện Express để tạo server
 const express = require("express");
 
-// Load biến môi trường từ file .env (PORT, DB_URL, ...)
+// Load biến môi trường từ file .env (ví dụ: PORT, DB_URL, ...)
 require("dotenv").config();
 
-// Import module kết nối cơ sở dữ liệu MongoDB
+// Import module để kết nối MongoDB (tùy bạn dùng mongoose hoặc native Mongo)
 const database = require("./config/database");
 
+// Import cấu hình hệ thống (ví dụ: prefix admin)
 const systemConfig = require("./config/system");
 
-// Import router của phần giao diện người dùng (client)
+// Import router phần giao diện người dùng (client)
 const router = require("./routers/client/index.router");
 
-// Import router của phần admin (dashboard, quản trị)
+// Import router phần quản trị admin
 const routerAdmin = require("./routers/admin/index.router");
 
-// Gọi hàm connect để kết nối MongoDB (có thể dùng mongoose hoặc thư viện khác)
+// Import middleware method-override để hỗ trợ PUT, PATCH, DELETE qua HTML form
+const methodOverride = require("method-override");
+const bodyParser = require("body-parser");
+// Gọi hàm kết nối đến MongoDB
 database.connect();
 
-// Khởi tạo app Express
+// Khởi tạo ứng dụng Express
 const app = express();
 
-// Lấy port từ file .env (hoặc bạn có thể dùng `const port = process.env.PORT || 3000`)
+// Lấy cổng từ biến môi trường (.env) hoặc gán mặc định nếu cần
 const port = process.env.PORT;
 
-// Cấu hình thư mục chứa view template
+// Cấu hình thư mục chứa các file view (Pug)
 app.set("views", "./views");
 
-// Cấu hình engine render view là pug (thay cho EJS, handlebars...)
+// Thiết lập engine template là Pug
 app.set("view engine", "pug");
 
-// App Local Variables
+// Biến toàn cục trong app, dùng để truy cập prefix admin trong pug
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-// Cho phép Express phục vụ file tĩnh như ảnh, CSS, JS từ thư mục "public"
+// Cho phép truy cập file tĩnh trong thư mục "public" (CSS, JS, ảnh...)
 app.use(express.static("public"));
 
-// Gắn router cho giao diện client
+// Middleware để parse dữ liệu từ form submit (application/x-www-form-urlencoded)
+app.use(express.urlencoded({ extended: true }));
+
+// Kích hoạt method-override để form có thể gửi PATCH, DELETE thông qua input hidden
+// Sử dụng: <input type="hidden" name="_method" value="PATCH">
+app.use(methodOverride("_method"));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded());
+// Gắn router cho phía giao diện người dùng (client)
 router(app);
 
-// Gắn router cho giao diện admin
+// Gắn router cho phía admin (dashboard)
 routerAdmin(app);
 
-// Khởi động server, lắng nghe cổng `port`
+// Khởi động server và lắng nghe tại cổng được cấu hình
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

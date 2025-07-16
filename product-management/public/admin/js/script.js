@@ -47,3 +47,67 @@ if (formSearch) {
     window.location.href = url.href;
   });
 }
+
+// Checkbox Multi
+const checkboxMulti = document.querySelector("[checkbox-multi]");
+if (checkboxMulti) {
+  const inputCheckAll = checkboxMulti.querySelector("input[name='checkall']");
+  const inputIds = checkboxMulti.querySelectorAll("input[name='id']");
+
+  // Xử lý sự kiện khi click vào checkbox "Chọn tất cả"
+  inputCheckAll.addEventListener("change", () => {
+    inputIds.forEach((input) => {
+      input.checked = inputCheckAll.checked;
+    });
+  });
+
+  // Xử lý sự kiện khi click vào các checkbox item
+  inputIds.forEach((input) => {
+    input.addEventListener("change", () => {
+      const countChecked = checkboxMulti.querySelectorAll(
+        "input[name='id']:checked"
+      ).length;
+
+      // Cập nhật trạng thái của checkbox "Chọn tất cả"
+      inputCheckAll.checked = countChecked === inputIds.length;
+    });
+  });
+}
+// End Checkbox Multi
+
+// Form Chang Multi
+const formChangeMulti = document.querySelector("[form-change-multi]");
+
+if (formChangeMulti) {
+  formChangeMulti.addEventListener("submit", function handleSubmit(e) {
+    e.preventDefault();
+
+    const checkboxMulti = document.querySelector("[checkbox-multi]");
+    const inputChecked = checkboxMulti.querySelectorAll(
+      "input[name='id']:checked"
+    );
+
+    if (inputChecked.length > 0) {
+      const inputIds = formChangeMulti.querySelector("input[name='ids']");
+      const inputRedirect = formChangeMulti.querySelector(
+        "input[name='redirect']"
+      );
+
+      // Gán danh sách ID
+      let ids = [];
+      inputChecked.forEach((input) => ids.push(input.value));
+      inputIds.value = ids.join(",");
+
+      // Gán giá trị redirect về URL hiện tại
+      inputRedirect.value = window.location.pathname + window.location.search;
+
+      // 👉 Gỡ bỏ event để tránh lặp submit sau khi gọi lại
+      formChangeMulti.removeEventListener("submit", handleSubmit);
+      formChangeMulti.submit();
+    } else {
+      alert("Vui lòng chọn ít nhất 1 bản ghi");
+    }
+  });
+}
+
+// End Form Chang Multi
