@@ -1,0 +1,23 @@
+mixin pagination(pagination)
+  if pagination.totalPage > 1
+    nav
+      ul.pagination.justify-content-center
+
+        //- Nút Previous
+        li.page-item(class=(pagination.currentPage === 1 ? 'disabled' : ''))
+          a.page-link(
+            href=`?page=${pagination.currentPage - 1}&keyword=${query.keyword || ''}&status=${query.status || ''}`
+          ) Trang trước
+
+        //- Vòng lặp số trang
+        each pageNumber in Array(pagination.totalPage).fill().map((_, i) => i + 1)
+          li.page-item(class=(pagination.currentPage === pageNumber ? 'active' : ''))
+            a.page-link(
+              href=`?page=${pageNumber}&keyword=${query.keyword || ''}&status=${query.status || ''}`
+            )= pageNumber
+
+        //- Nút Next
+        li.page-item(class=(pagination.currentPage === pagination.totalPage ? 'disabled' : ''))
+          a.page-link(
+            href=`?page=${pagination.currentPage + 1}&keyword=${query.keyword || ''}&status=${query.status || ''}`
+          ) Kế tiếp

@@ -1,48 +1,16 @@
 extends ../../layouts/default
-
+include ../../mixins/filterStatus
+include ../../mixins/search
+include ../../mixins/pagination
 block main
   h1.mb-4.text-primary Trang danh sách sản phẩm
 
   .row.mb-3.align-items-center
-
-  
-    //- Dùng AJAX để load lại trang, phù hợp với giao diện người dùng hơn 
-
     .col-md-6
-      div
-        span.mr-2.text-muted Trạng thái:
-        each status in filterStatus
-          button.btn.btn-sm.mr-1(
-            class=((!query.status && status.status === "") || query.status === status.status ? 'btn-primary' : 'btn-outline-primary'),
-            button-status=status.status
-          )= status.name
+      //- Mixin
+      +filter-status(filterStatus)
     .col-md-6
-      form(id="form-search")
-        input(type="hidden", name="status", value=query.status || "")
-        .input-group
-          input.form-control(type="text", name="keyword", placeholder="Tìm sản phẩm...", value=query.keyword || "")
-          .input-group-append
-            button.btn.btn-success(type="submit") Tìm
-    
-    //- Cách viết dùng các phương thức có sẵn, nhanh gọn hơn 
-    //- .col-md-12 
-    //-   form#filter-form(method="GET")
-    //-     .row.mb-3.align-items-center
-    //-       .col-md-3
-    //-         label.text-muted Trạng thái:
-    //-         select.form-control(name="status")
-    //-           option(value="") Tất cả
-    //-           option(value="active", selected=(query.status == 'active')) Hiển thị
-    //-           option(value="inactive", selected=(query.status == 'inactive')) Ẩn
-    //-       .col-md-4
-    //-         input.form-control(type="text", name="keyword", placeholder="Tìm sản phẩm...", value=query.keyword || "")
-    //-       .col-md-2
-    //-         select.form-control(name="sort")
-    //-           option(value="") Sắp xếp
-    //-           option(value="price-asc", selected=(query.sort == 'price-asc')) Giá tăng dần
-    //-           option(value="price-desc", selected=(query.sort == 'price-desc')) Giá giảm dần
-    //-       .col-md-2
-    //-         button.btn.btn-success.w-100(type="submit") Lọc
+      +search(query.keyword, query.status)
 
   table.table.table-hover.table-bordered.table-sm.align-middle
     thead.thead-dark
@@ -89,3 +57,7 @@ block main
               href=`/admin/products/delete/${product._id}` 
               onclick="return confirm('Xác nhận xoá?')"
             ) Xoá
+ 
+
+  //- Phân trang
+  +pagination(pagination)

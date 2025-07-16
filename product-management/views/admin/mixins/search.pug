@@ -1,0 +1,7 @@
+mixin search(keyword, status)
+  form(id="form-search", method="get")
+    input(type="hidden", name="status", value=status || "")
+    .input-group
+      input.form-control(type="text", name="keyword", placeholder="Tìm sản phẩm...", value=keyword || "")
+      .input-group-append
+        button.btn.btn-success(type="submit") Tìm

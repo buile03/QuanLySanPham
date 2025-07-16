@@ -1,102 +1,39 @@
 const Product = require("../../models/product.model");
-// [GET] /admin/products
+const filterStatusHelper = require("../../helpers/filterStatus");
+const searchHelper = require("../../helpers/search");
+const paginationHelper = require("../../helpers/pagination");
+
 module.exports.index = async (req, res) => {
-  let filterStatus = [
-    {
-      name: "Tất cả",
-      status: "",
-      class: "active",
-    },
-    {
-      name: "Hiển thị",
-      status: "active",
-      class: "",
-    },
-    {
-      name: "Ẩn",
-      status: "inactive",
-      class: "",
-    },
-  ];
+  try {
+    const filterStatus = filterStatusHelper(req.query);
+    const searchCondition = searchHelper(req.query);
 
-  let find = {
-    deleted: false,
-  };
+    let filter = { deleted: false };
+    // Lọc trạng thái
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    // Tìm kiếm
+    if (searchCondition.regex) {
+      filter.title = searchCondition.regex;
+    }
 
-  // Lọc theo trạng thái
-  if (req.query.status) {
-    find.status = req.query.status;
+    const totalItems = await Product.countDocuments(filter);
+    const pagination = paginationHelper(req.query.page, totalItems, 4);
+
+    const products = await Product.find(filter)
+      .skip(pagination.skip)
+      .limit(pagination.limit);
+
+    res.render("admin/pages/products/index", {
+      pageTitle: "Danh sách sản phẩm",
+      products,
+      query: req.query,
+      filterStatus,
+      pagination,
+    });
+  } catch (err) {
+    console.error("Product List Error:", err);
+    res.status(500).send("Lỗi server");
   }
-
-  // //Tìm kiếm
-  if (req.query.keyword) find.title = new RegExp(req.query.keyword, "i");
-
-  const products = await Product.find(find);
-
-  res.render("admin/pages/products/index", {
-    pageTitle: "Danh sách sản phẩm",
-    products: products,
-    query: req.query, // truyền lại để view biết đang chọn gì
-    filterStatus: filterStatus,
-  });
 };
-
-// const Product = require("../../models/product.model");
-
-// module.exports.index = async (req, res) => {
-//   const query = req.query;
-//   const keyword = query.keyword || "";
-//   const status = query.status || "";
-//   const sortBy = query.sort || ""; // ví dụ mở rộng
-//   const page = parseInt(query.page) || 1;
-//   const limit = 10;
-//   const skip = (page - 1) * limit;
-
-//   Lọc trạng thái
-//   let filter = { deleted: false };
-//   if (status) {
-//     filter.status = status;
-//   }
-
-//   Tìm kiếm
-//   if (keyword) {
-//     filter.title = new RegExp(keyword, "i");
-//   }
-
-//   Sắp xếp
-//   let sort = {};
-//   if (sortBy === "price-asc") sort.price = 1;
-//   if (sortBy === "price-desc") sort.price = -1;
-
-//   const totalProducts = await Product.countDocuments(filter);
-//   const totalPages = Math.ceil(totalProducts / limit);
-
-//   const products = await Product.find(filter)
-//     .sort(sort)
-//     .skip(skip)
-//     .limit(limit);
-
-//   Đặt lại trạng thái active cho từng filter button
-//   const filterStatus = [
-//     { name: "Tất cả", status: "", class: status === "" ? "active" : "" },
-//     {
-//       name: "Hiển thị",
-//       status: "active",
-//       class: status === "active" ? "active" : "",
-//     },
-//     {
-//       name: "Ẩn",
-//       status: "inactive",
-//       class: status === "inactive" ? "active" : "",
-//     },
-//   ];
-
-//   res.render("admin/pages/products/index", {
-//     pageTitle: "Danh sách sản phẩm",
-//     products,
-//     query,
-//     filterStatus,
-//     totalPages,
-//     currentPage: page,
-//   });
-// };

@@ -1,0 +1,8 @@
+mixin filter-status(filterStatus)
+  div
+    span.mr-2.text-muted Trạng thái:
+    each status in filterStatus
+      button.btn.btn-sm.mr-1(
+        class=(query.status === status.status || (!query.status && status.status === "") ? 'btn-primary' : 'btn-outline-primary'),
+        button-status=status.status
+      )= status.name
