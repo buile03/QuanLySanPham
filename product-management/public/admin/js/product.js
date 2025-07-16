@@ -98,4 +98,51 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
+
+  formChangeMulti.addEventListener("submit", (e) => {
+    const checkboxMulti = document.querySelector("[checkbox-multi]");
+    const inputsChecked = checkboxMulti.querySelectorAll(
+      "input[name='id']:checked"
+    );
+
+    const typeChange = e.target.elements.type.value;
+
+    if (inputsChecked.length === 0) {
+      e.preventDefault();
+      alert("Vui lòng chọn ít nhất 1 bản ghi để thực hiện thao tác");
+      return;
+    }
+
+    if (typeChange === "delete-all") {
+      const isConfirm = confirm("Bạn có chắc muốn xóa những sản phẩm này?");
+      if (!isConfirm) {
+        e.preventDefault();
+        return;
+      }
+    }
+
+    // Thu thập id và vị trí tương ứng
+    const idAndPositions = Array.from(inputsChecked).map((input) => {
+      const row = input.closest("tr");
+      const positionInput = row.querySelector("input[name='position']");
+      return {
+        id: input.value,
+        position: parseInt(positionInput.value) || 0,
+      };
+    });
+
+    const ids = idAndPositions.map((item) => item.id);
+
+    const inputIds = formChangeMulti.querySelector("input[name='ids']");
+    const inputRedirect = formChangeMulti.querySelector(
+      "input[name='redirect']"
+    );
+    const inputPositions = formChangeMulti.querySelector(
+      "input[name='positions']"
+    );
+
+    inputIds.value = ids.join(",");
+    inputRedirect.value = window.location.pathname + window.location.search;
+    inputPositions.value = JSON.stringify(idAndPositions);
+  });
 });

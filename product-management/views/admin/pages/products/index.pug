@@ -23,9 +23,9 @@ block main
           th(style="min-width: 150px") Tên sản phẩm
           th(style="min-width: 200px") Mô tả
           th Giá
+          th Vị trí 
           th Giảm (%)
           th Tồn kho
-          th Vị trí
           th Trạng thái
           th(style="width: 120px") Thao tác
       tbody
@@ -47,9 +47,16 @@ block main
               else
                 = product.description
             td #{product.price.toLocaleString()}đ
+            td 
+              input(
+                type="number",
+                value=product.position
+                style="width:60px"
+                min="1",
+                name="position"
+              )
             td.text-center #{product.discountPercentage}%
             td.text-center #{product.stock}
-            td.text-center #{product.position}
             td.text-center
               if(product.status == "active")
                 a(

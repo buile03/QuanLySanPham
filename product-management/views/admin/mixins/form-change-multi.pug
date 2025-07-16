@@ -9,11 +9,15 @@ mixin form-change-multi(path)
     .d-flex.align-items-start.mb-3
       .form-group.mr-2
         select(name="type", class="form-control")
+          option(disabled selected) ---- Chọn hành động ----
           option(value="active") Hiển thị
           option(value="inactive") Ẩn
+          option(value="delete-all") Xóa tất cả
+          option(value="change-position") Thay đổi vị trí
       .form-group
         input(type="hidden", name="_method", value="PATCH") 
         input(type="text", name="ids", class="form-control d-none")
         input(type="hidden", name="redirect", id="redirect-input-multi")
+        input(type="hidden", name="positions")
       button(type="submit", class="btn btn-primary") Áp dụng
     block

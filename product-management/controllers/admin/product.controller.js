@@ -22,6 +22,7 @@ module.exports.index = async (req, res) => {
     const pagination = paginationHelper(req.query.page, totalItems, 10);
 
     const products = await Product.find(filter)
+      .sort({ position: "desc" })
       .skip(pagination.skip)
       .limit(pagination.limit);
 
@@ -61,6 +62,22 @@ module.exports.changeMulti = async (req, res) => {
 
     if (["active", "inactive"].includes(type) && idList.length > 0) {
       await Product.updateMany({ _id: { $in: idList } }, { status: type });
+    }
+    if (type === "delete-all") {
+      await Product.updateMany(
+        { _id: { $in: idList } },
+        { deleted: true, updatedAt: new Date() }
+      );
+    }
+
+    if (type === "change-position") {
+      const positionsRaw = req.body.positions;
+      const positions =
+        typeof positionsRaw === "string" ? JSON.parse(positionsRaw) : [];
+
+      for (const item of positions) {
+        await Product.updateOne({ _id: item.id }, { position: item.position });
+      }
     }
 
     res.redirect(redirectUrl);
