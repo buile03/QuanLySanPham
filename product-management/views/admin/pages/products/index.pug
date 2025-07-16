@@ -13,8 +13,6 @@ block main
     .col-md-6
       +search(query.keyword, query.status)
 
-
-
   +form-change-multi(`${prefixAdmin}/products/change-multi`)
     table.table.table-hover.table-bordered.table-sm.align-middle
       thead.thead-dark
@@ -33,17 +31,17 @@ block main
       tbody
         each product, index in products
           tr
-            td.text-center 
+            td.text-center
               input(type="checkbox", name="id", value=product._id)
-            td.text-center 
+            td.text-center
               img(
-                src=product.thumbnail, 
-                alt="Thumbnail", 
-                class="img-thumbnail", 
+                src=product.thumbnail,
+                alt="Thumbnail",
+                class="img-thumbnail",
                 style="width: 50px; height: 50px; object-fit: cover;"
               )
             td #{product.title}
-            td 
+            td
               if product.description.length > 100
                 span(title=product.description)= product.description.substring(0, 100) + '...'
               else
@@ -57,11 +55,11 @@ block main
                 a(
                   href="javascript:;",
                   data-status="active",
-                  data-id=product._id, 
-                  button-change-status="",  
+                  data-id=product._id,
+                  button-change-status="",
                   class="badge badge-success"
                 ) Hiển thị
-              else 
+              else
                 a(
                   href="javascript:;",
                   data-status="inactive",
@@ -70,24 +68,33 @@ block main
                   class="badge badge-danger"
                 ) Ẩn
             td.text-center
-              a.btn.btn-sm.btn-outline-warning.mr-1(href=`/admin/products/edit/${product._id}`) Sửa
-              a.btn.btn-sm.btn-outline-danger(
-                href=`/admin/products/delete/${product._id}` 
-                onclick="return confirm('Xác nhận xoá?')"
-              ) Xoá
-
-
+              button(class="btn btn-warning btn-sm ml-1") Sửa
+              button(
+                class="btn btn-danger btn-sm ml-1"
+                button-delete
+                data-id=product._id
+              ) Xóa
 
   +pagination(pagination)
 
-  form( 
-    action="", 
-    method="POST",  
+  //- Form change status
+  form(
+    action="",
+    method="POST",
     id="form-change-status",
     data-path=`${prefixAdmin}/products/change-status`
   )
     input(type="hidden", name="_method", value="PATCH")
     input(type="hidden", name="redirect", id="redirect-input")
 
+  //- Form delete - Loại bỏ input redirect vì sẽ gửi qua URL params
+  form(
+    action="",
+    method="POST",
+    id="form-delete-item",
+    data-path=`${prefixAdmin}/products/delete`
+  )
+    input(type="hidden", name="_method", value="DELETE")
+
   script(src="/admin/js/product.js")
-  script(src="/admin/js/script.js")
+  

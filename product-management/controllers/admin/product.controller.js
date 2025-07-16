@@ -69,3 +69,38 @@ module.exports.changeMulti = async (req, res) => {
     res.redirect("/admin/products"); // fallback nếu có lỗi
   }
 };
+
+//  xóa cứng
+// [DELETE] /admin/products/delete/:id
+// module.exports.deleteItem = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     await Product.deleteOne({ _id: id });
+
+//     const redirectUrl = req.query.redirect || "/admin/products"; // fallback nếu không có
+//     res.redirect(redirectUrl);
+//   } catch (error) {
+//     console.error("Lỗi khi xóa sản phẩm:", error.message);
+//     res.redirect("/admin/products");
+//   }
+// };
+
+// [DELETE] /admin/products/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Product.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        updatedAt: new Date(),
+      }
+    );
+
+    const redirectUrl = req.query.redirect || "/admin/products"; // fallback nếu không có
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.error("Lỗi khi xóa sản phẩm:", error.message);
+    res.redirect("/admin/products");
+  }
+};
