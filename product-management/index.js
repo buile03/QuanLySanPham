@@ -19,6 +19,10 @@ const routerAdmin = require("./routers/admin/index.router");
 // Import middleware method-override để hỗ trợ PUT, PATCH, DELETE qua HTML form
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
+
+const flash = require("express-flash");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 // Gọi hàm kết nối đến MongoDB
 database.connect();
 
@@ -50,6 +54,10 @@ app.use(methodOverride("_method"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
 // Gắn router cho phía giao diện người dùng (client)
+//Flash
+app.use(cookieParser("BUILE"));
+app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(flash());
 router(app);
 
 // Gắn router cho phía admin (dashboard)

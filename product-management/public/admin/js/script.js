@@ -37,3 +37,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+//show alert
+const showAlert = document.querySelector("[show-alert]");
+
+if (showAlert) {
+  const time = parseInt(showAlert.getAttribute("data-time"));
+  const closeButton = showAlert.querySelector(".alert-close");
+
+  // Tự động ẩn sau time ms
+  const timeoutId = setTimeout(() => {
+    showAlert.classList.add("alert-hidden");
+  }, time);
+
+  // Xử lý nút đóng
+  closeButton.addEventListener("click", () => {
+    showAlert.classList.add("alert-hidden");
+    clearTimeout(timeoutId); // Hủy timeout nếu người dùng đóng thủ công
+  });
+
+  // Xóa phần tử khỏi DOM sau khi animation kết thúc
+  showAlert.addEventListener("transitionend", () => {
+    showAlert.remove();
+  });
+}
+
+//end show alert

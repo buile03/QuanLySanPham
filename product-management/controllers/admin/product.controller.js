@@ -46,6 +46,8 @@ module.exports.changeStatus = async (req, res) => {
   const redirectUrl = req.body.redirect || "/admin/products";
   await Product.updateOne({ _id: id }, { status: status });
 
+  req.flash("success", "Thay đổi trạng thái thành công");
+
   res.redirect(redirectUrl);
 };
 
@@ -62,6 +64,7 @@ module.exports.changeMulti = async (req, res) => {
 
     if (["active", "inactive"].includes(type) && idList.length > 0) {
       await Product.updateMany({ _id: { $in: idList } }, { status: type });
+      req.flash("success", `Thay đổi trạng thái ${idList.length} thành công`);
     }
     if (type === "delete-all") {
       await Product.updateMany(

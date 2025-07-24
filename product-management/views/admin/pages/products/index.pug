@@ -3,10 +3,11 @@ include ../../mixins/filterStatus
 include ../../mixins/search
 include ../../mixins/pagination
 include ../../mixins/form-change-multi
+include ../../mixins/alert
 
 block main
   h1.mb-4.text-primary Trang danh sách sản phẩm
-
+  +alert-success("5000")
   .row.mb-3.align-items-center
     .col-md-6
       +filter-status(filterStatus)
