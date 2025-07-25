@@ -1,69 +1,76 @@
-// Import thư viện Express để tạo server
+// Import thư viện cần thiết
 const express = require("express");
-
-// Load biến môi trường từ file .env (ví dụ: PORT, DB_URL, ...)
+const path = require("path");
 require("dotenv").config();
 
-// Import module để kết nối MongoDB (tùy bạn dùng mongoose hoặc native Mongo)
-const database = require("./config/database");
-
-// Import cấu hình hệ thống (ví dụ: prefix admin)
-const systemConfig = require("./config/system");
-
-// Import router phần giao diện người dùng (client)
-const router = require("./routers/client/index.router");
-
-// Import router phần quản trị admin
-const routerAdmin = require("./routers/admin/index.router");
-
-// Import middleware method-override để hỗ trợ PUT, PATCH, DELETE qua HTML form
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
-
 const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-// Gọi hàm kết nối đến MongoDB
+
+// Kết nối cơ sở dữ liệu MongoDB
+const database = require("./config/database");
 database.connect();
+
+// Import cấu hình và router
+const systemConfig = require("./config/system");
+const routerClient = require("./routers/client/index.router");
+const routerAdmin = require("./routers/admin/index.router");
 
 // Khởi tạo ứng dụng Express
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Lấy cổng từ biến môi trường (.env) hoặc gán mặc định nếu cần
-const port = process.env.PORT;
-
-// Cấu hình thư mục chứa các file view (Pug)
-app.set("views", "./views");
-
-// Thiết lập engine template là Pug
+// Cấu hình view engine là Pug
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-// Biến toàn cục trong app, dùng để truy cập prefix admin trong pug
+// Thiết lập biến toàn cục (global) cho template
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-// Cho phép truy cập file tĩnh trong thư mục "public" (CSS, JS, ảnh...)
-app.use(express.static("public"));
-
-// Middleware để parse dữ liệu từ form submit (application/x-www-form-urlencoded)
+// Middleware xử lý dữ liệu POST
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Kích hoạt method-override để form có thể gửi PATCH, DELETE thông qua input hidden
-// Sử dụng: <input type="hidden" name="_method" value="PATCH">
+// Middleware cho static files (truy cập được các file trong public/, bao gồm uploads/)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Middleware hỗ trợ PUT và DELETE từ form
 app.use(methodOverride("_method"));
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded());
-// Gắn router cho phía giao diện người dùng (client)
-//Flash
+// Middleware session + flash message
 app.use(cookieParser("BUILE"));
-app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(
+  session({
+    secret: "BUILE",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  })
+);
 app.use(flash());
-router(app);
 
-// Gắn router cho phía admin (dashboard)
+// Cấu hình router cho client và admin
+routerClient(app);
 routerAdmin(app);
 
-// Khởi động server và lắng nghe tại cổng được cấu hình
+// // Middleware xử lý lỗi 404 (nếu cần)
+// app.use((req, res, next) => {
+//   res.status(404).render("errors/404", {
+//     pageTitle: "404 - Không tìm thấy trang",
+//   });
+// });
+
+// // Middleware xử lý lỗi server (nếu cần)
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).render("errors/500", {
+//     pageTitle: "500 - Lỗi máy chủ",
+//   });
+// });
+
+// Khởi động server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`✅ Server đang chạy tại http://localhost:${port}`);
 });

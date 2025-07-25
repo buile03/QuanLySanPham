@@ -9,11 +9,15 @@ block main
   h1.mb-4.text-primary Trang danh sách sản phẩm
   +alert-success("5000")
   .row.mb-3.align-items-center
-    .col-md-6
+    .col-md-4
       +filter-status(filterStatus)
-    .col-md-6
+    .col-md-4
       +search(query.keyword, query.status)
-
+    .col-md-4 
+      a.btn.btn-primary(href=`${prefixAdmin}/products/create`) 
+        i.fas.fa-plus.mr-2
+        | Thêm mới
+    
   +form-change-multi(`${prefixAdmin}/products/change-multi`)
     table.table.table-hover.table-bordered.table-sm.align-middle
       thead.thead-dark
@@ -36,7 +40,7 @@ block main
               input(type="checkbox", name="id", value=product._id)
             td.text-center
               img(
-                src=product.thumbnail,
+                src=`/${product.thumbnail}`,
                 alt="Thumbnail",
                 class="img-thumbnail",
                 style="width: 50px; height: 50px; object-fit: cover;"

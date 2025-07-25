@@ -2,6 +2,7 @@ const Product = require("../../models/product.model");
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
+const systemConfig = require("../../config/system");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
   try {
@@ -122,5 +123,67 @@ module.exports.deleteItem = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi xóa sản phẩm:", error.message);
     res.redirect("/admin/products");
+  }
+};
+
+// [GET] /admin/product/create
+module.exports.create = async (req, res) => {
+  try {
+    res.render("admin/pages/products/create", {
+      pageTitle: "Thêm mới sản phẩm",
+    });
+  } catch (err) {
+    console.error("Product List Error:", err);
+    res.status(500).send("Lỗi server");
+  }
+};
+
+// [POST] /admin/products/create
+module.exports.createPost = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      price,
+      discountPercentage,
+      stock,
+      thumbnail,
+      status,
+      position,
+    } = req.body || {};
+
+    if (!title) {
+      req.flash("error", "Thiếu tên sản phẩm");
+      return res.redirect(`${systemConfig.prefixAdmin}/products/create`);
+    }
+    if (req.body.position == "") {
+      const countProduct = await Product.countDocuments();
+      req.body.position = countProduct + 1;
+    } else {
+      req.body.position = parseInt(req.body.position);
+    }
+
+    const thumbnailPath = req.file ? `uploads/${req.file.filename}` : "";
+
+    const newProduct = new Product({
+      title,
+      description,
+      price: parseInt(price),
+      discountPercentage: parseFloat(discountPercentage) || 0,
+      stock: parseInt(stock),
+      thumbnail: thumbnailPath,
+      status,
+      position: req.body.position,
+      deleted: false,
+      deletedAt: null,
+    });
+
+    await newProduct.save();
+    req.flash("success", "Thêm sản phẩm thành công");
+    console.log("Uploaded file info:", req.file);
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  } catch (err) {
+    console.error("Product List Error:", err);
+    res.status(500).send("Lỗi server");
   }
 };
