@@ -63,3 +63,37 @@ if (showAlert) {
 }
 
 //end show alert
+
+//upload img
+
+const thumbnailInput = document.getElementById("thumbnail");
+const previewImg = document.getElementById("preview-img");
+const removeBtn = document.getElementById("remove-btn");
+
+// Khi chọn ảnh
+thumbnailInput.addEventListener("change", function (e) {
+  const file = e.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      previewImg.src = event.target.result;
+      previewImg.style.display = "block";
+      removeBtn.style.display = "inline-block";
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewImg.style.display = "none";
+    removeBtn.style.display = "none";
+  }
+});
+
+// Khi bấm nút xóa ảnh
+removeBtn.addEventListener("click", function () {
+  thumbnailInput.value = ""; // Xóa file đã chọn
+  previewImg.src = "";
+  previewImg.style.display = "none";
+  removeBtn.style.display = "none";
+});
+
+//end upload img

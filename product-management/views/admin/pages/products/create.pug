@@ -1,8 +1,8 @@
 extends ../../layouts/default
-
+include ../../mixins/alert
 block main
   h1.mb-4.text-primary Thêm sản phẩm mới
-
+  +alert-error(3000)
   form(method="POST", action=`${prefixAdmin}/products/create` enctype="multipart/form-data")
     .form-group
       label(for="title") Tên sản phẩm
@@ -31,6 +31,10 @@ block main
     .form-group
       label(for="thumbnail") Ảnh đại diện
       input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
+      br
+      img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+      br
+      button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
 
     .form-group
       label(for="status") Trạng thái
