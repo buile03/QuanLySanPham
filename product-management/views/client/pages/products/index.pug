@@ -10,9 +10,15 @@ block main
         each item in products
           .product-card
             img(src=item.thumbnail, alt=item.title)
-            h3= item.title
-            p= item.description
-            p.price-new Giá mới: #{item.newPrice.toLocaleString()} VNĐ
-            p.price-old Giá cũ: #{item.price.toLocaleString()} VNĐ
+            a(href=`/product/detail/${item.slug}`)
+              h3.product-title= item.title
+
+            p.product-description= item.description
+            p.price-new
+              | Giá mới: 
+              strong.text-danger #{item.newPrice.toLocaleString()} VNĐ
+            p.price-old
+              | Giá cũ: 
+              del.text-muted #{item.price.toLocaleString()} VNĐ
       else
-        p Không có sản phẩm nào.
+        p.text-warning Không có sản phẩm nào.
