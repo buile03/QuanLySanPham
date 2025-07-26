@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router(); // QUAN TRỌNG: Dòng này bị thiếu
+const router = express.Router();
 const productRouter = require("./product.router");
 const homeRouter = require("./home.router");
 
