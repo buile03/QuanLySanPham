@@ -54,11 +54,11 @@ app.use(flash());
 app.use("/", routerClient);
 app.use(systemConfig.prefixAdmin, routerAdmin); // Sử dụng prefixAdmin từ config
 
-// Khởi động server
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`✅ Server đang chạy tại http://localhost:${port}`);
-  });
-}
+// // Khởi động server
+// if (require.main === module) {
+//   app.listen(port, () => {
+//     console.log(`✅ Server đang chạy tại http://localhost:${port}`);
+//   });
+// }
 
 module.exports = app;
