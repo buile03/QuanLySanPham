@@ -52,8 +52,8 @@ app.use(
 app.use(flash());
 
 // Cấu hình router cho client và admin
-routerClient(app);
-routerAdmin(app);
+app.use("/", clientRouter);
+app.use("/admin", adminRouter);
 
 // // Middleware xử lý lỗi 404 (nếu cần)
 // app.use((req, res, next) => {
