@@ -80,7 +80,9 @@ block main
                   class="badge badge-danger"
                 ) Ẩn
             td.text-center
-              button(class="btn btn-warning btn-sm ml-1") Sửa
+              a(
+                href=`${prefixAdmin}/products/edit/${product._id}`
+                class="btn btn-warning btn-sm ml-1") Sửa
               button(
                 class="btn btn-danger btn-sm ml-1"
                 button-delete

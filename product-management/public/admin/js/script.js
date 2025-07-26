@@ -51,11 +51,12 @@ if (showAlert) {
   }, time);
 
   // Xử lý nút đóng
-  closeButton.addEventListener("click", () => {
-    showAlert.classList.add("alert-hidden");
-    clearTimeout(timeoutId); // Hủy timeout nếu người dùng đóng thủ công
-  });
-
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      showAlert.classList.add("alert-hidden");
+      clearTimeout(timeoutId); // Hủy timeout nếu người dùng đóng thủ công
+    });
+  }
   // Xóa phần tử khỏi DOM sau khi animation kết thúc
   showAlert.addEventListener("transitionend", () => {
     showAlert.remove();
@@ -71,29 +72,32 @@ const previewImg = document.getElementById("preview-img");
 const removeBtn = document.getElementById("remove-btn");
 
 // Khi chọn ảnh
-thumbnailInput.addEventListener("change", function (e) {
-  const file = e.target.files[0];
+if (thumbnailInput) {
+  thumbnailInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      previewImg.src = event.target.result;
-      previewImg.style.display = "block";
-      removeBtn.style.display = "inline-block";
-    };
-    reader.readAsDataURL(file);
-  } else {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        previewImg.src = event.target.result;
+        previewImg.style.display = "block";
+        removeBtn.style.display = "inline-block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewImg.style.display = "none";
+      removeBtn.style.display = "none";
+    }
+  });
+}
+if (removeBtn) {
+  // Khi bấm nút xóa ảnh
+  removeBtn.addEventListener("click", function () {
+    thumbnailInput.value = ""; // Xóa file đã chọn
+    previewImg.src = "";
     previewImg.style.display = "none";
     removeBtn.style.display = "none";
-  }
-});
-
-// Khi bấm nút xóa ảnh
-removeBtn.addEventListener("click", function () {
-  thumbnailInput.value = ""; // Xóa file đã chọn
-  previewImg.src = "";
-  previewImg.style.display = "none";
-  removeBtn.style.display = "none";
-});
+  });
+}
 
 //end upload img

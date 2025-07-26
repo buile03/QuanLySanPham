@@ -187,3 +187,72 @@ module.exports.createPost = async (req, res) => {
     res.status(500).send("Lỗi server");
   }
 };
+
+// [GET] /admin/product/edit/:id
+module.exports.edit = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id,
+    };
+
+    const product = await Product.findOne(find);
+    console.log(product);
+    res.render("admin/pages/products/edit", {
+      pageTitle: "Chỉnh sửa sản phẩm",
+      product: product,
+    });
+  } catch (err) {
+    console.error("Product List Error:", err);
+    res.status(500).send("Lỗi server");
+  }
+};
+
+// [PATCH] /admin/products/edit/:id
+module.exports.editPatch = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {
+      title,
+      description,
+      price,
+      discountPercentage,
+      stock,
+      status,
+      position,
+    } = req.body || {};
+
+    // Validation
+    if (!title) {
+      req.flash("error", "Thiếu tên sản phẩm");
+      return res.redirect(`${systemConfig.prefixAdmin}/products/edit/${id}`);
+    }
+
+    // Chuẩn bị dữ liệu cập nhật
+    const updateData = {
+      title,
+      description,
+      price: parseInt(price) || 0,
+      discountPercentage: parseFloat(discountPercentage) || 0,
+      stock: parseInt(stock) || 0,
+      status,
+      position: parseInt(position) || 1,
+      updatedAt: new Date(),
+    };
+
+    // Xử lý upload ảnh mới nếu có
+    if (req.file) {
+      updateData.thumbnail = `uploads/${req.file.filename}`;
+    }
+
+    // Cập nhật sản phẩm
+    await Product.updateOne({ _id: id }, updateData);
+
+    req.flash("success", "Cập nhật sản phẩm thành công");
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  } catch (err) {
+    console.error("Product Edit Error:", err);
+    req.flash("error", "Có lỗi xảy ra khi cập nhật sản phẩm");
+    res.redirect(`${systemConfig.prefixAdmin}/products/edit/${req.params.id}`);
+  }
+};

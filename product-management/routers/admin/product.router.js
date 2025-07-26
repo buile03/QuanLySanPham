@@ -30,4 +30,12 @@ router.post(
   controller.createPost
 );
 
+//edit
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  validate.createPost, // Có thể tái sử dụng validation của create
+  controller.editPatch
+);
 module.exports = router;

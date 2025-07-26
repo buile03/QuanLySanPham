@@ -1,0 +1,59 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  h1.mb-4.text-primary Chỉnh sửa sản phẩm
+
+  +alert-error(3000)
+  +alert-success(3000)
+
+  form(method="POST", action=`${prefixAdmin}/products/edit/${product._id}?_method=PATCH` enctype="multipart/form-data")
+    
+    .form-group
+      label(for="title") Tên sản phẩm
+      input.form-control(type="text", name="title", id="title", value=product.title, required)
+
+    .form-group
+      label(for="description") Mô tả
+      textarea.form-control(name="description", id="description", rows="4")= product.description
+
+    .form-group
+      label(for="price") Giá
+      input.form-control(type="number", name="price", id="price", step="1000", value=product.price, min="0")
+
+    .form-group
+      label(for="discountPercentage") Giảm giá (%)
+      input.form-control(type="number", name="discountPercentage", id="discountPercentage", step="1", min="0", max="100", value=product.discountPercentage)
+
+    .form-group
+      label(for="stock") Tồn kho
+      input.form-control(type="number", name="stock", id="stock", min="0", value=product.stock)
+
+    .form-group
+      label(for="position") Vị trí
+      input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng", value=product.position)
+
+    .form-group
+      label(for="thumbnail") Ảnh đại diện
+      input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
+      br
+      if product.thumbnail
+        img#preview-img(src=`/${product.thumbnail}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
+        br
+        button#remove-btn(type="button", class="btn btn-sm btn-danger mt-2") Xóa ảnh
+        input(type="hidden", name="currentThumbnail", value=product.thumbnail)
+      else
+        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+        br
+        button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+
+    .form-group
+      label(for="status") Trạng thái
+      select.form-control(name="status", id="status")
+        option(value="active", selected=product.status == 'active') Hiển thị
+        option(value="inactive", selected=product.status == 'inactive') Ẩn
+
+    button.btn.btn-primary(type="submit") Cập nhật
+    a.btn.btn-secondary.ml-2(href=`${prefixAdmin}/products`) Quay lại
+
+  script(src="/admin/js/product.js")
