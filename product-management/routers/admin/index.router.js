@@ -1,9 +1,10 @@
+const express = require("express");
+const router = express.Router(); // QUAN TRỌNG: Dòng này bị thiếu
 const systemConfig = require("../../config/system");
-const dashboadRouter = require("./dashboard.router");
+const dashboardRouter = require("./dashboard.router");
 const productRouter = require("./product.router");
 
-module.exports = (app) => {
-  const PATH_ADMIN = systemConfig.prefixAdmin;
-  app.use(PATH_ADMIN + "/dashboard", dashboadRouter);
-  app.use(PATH_ADMIN + "/products", productRouter);
-};
+router.use("/dashboard", dashboardRouter);
+router.use("/products", productRouter);
+
+module.exports = router;

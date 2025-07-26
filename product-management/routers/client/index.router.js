@@ -1,9 +1,9 @@
-const productRouter = require("./product.router")
-const homeRouter = require("./home.router")
+const express = require("express");
+const router = express.Router(); // QUAN TRỌNG: Dòng này bị thiếu
+const productRouter = require("./product.router");
+const homeRouter = require("./home.router");
 
-module.exports  = (app) => {
+router.use("/", homeRouter);
+router.use("/product", productRouter);
 
-    app.use("/", homeRouter)
-
-    app.use("/product", productRouter)
-}
+module.exports = router;

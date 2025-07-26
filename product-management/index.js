@@ -2,7 +2,6 @@
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
-
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const flash = require("express-flash");
@@ -52,23 +51,8 @@ app.use(
 app.use(flash());
 
 // Cấu hình router cho client và admin
-app.use("/", clientRouter);
-app.use("/admin", adminRouter);
-
-// // Middleware xử lý lỗi 404 (nếu cần)
-// app.use((req, res, next) => {
-//   res.status(404).render("errors/404", {
-//     pageTitle: "404 - Không tìm thấy trang",
-//   });
-// });
-
-// // Middleware xử lý lỗi server (nếu cần)
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).render("errors/500", {
-//     pageTitle: "500 - Lỗi máy chủ",
-//   });
-// });
+app.use("/", routerClient);
+app.use(systemConfig.prefixAdmin, routerAdmin); // Sử dụng prefixAdmin từ config
 
 // Khởi động server
 if (require.main === module) {
