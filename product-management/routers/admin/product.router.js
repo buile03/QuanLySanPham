@@ -38,4 +38,8 @@ router.patch(
   validate.createPost, // Có thể tái sử dụng validation của create
   controller.editPatch
 );
+
+//detail
+router.get("/detail/:id", controller.detail);
+
 module.exports = router;
