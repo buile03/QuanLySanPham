@@ -101,3 +101,35 @@ if (removeBtn) {
 }
 
 //end upload img
+
+//sort
+
+const sortSelect = document.querySelector("[sort-select]");
+const sortClear = document.querySelector("[sort-clear]");
+
+if (sortSelect) {
+  sortSelect.addEventListener("change", (e) => {
+    const value = e.target.value;
+    const [sortKey, sortValue] = value.split("-");
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+    url.searchParams.delete("page"); // reset về trang 1
+
+    window.location.href = url.href;
+  });
+}
+
+if (sortClear) {
+  sortClear.addEventListener("click", () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("sortKey");
+    url.searchParams.delete("sortValue");
+    url.searchParams.delete("sort");
+    url.searchParams.delete("page"); // reset về trang 1
+
+    window.location.href = url.href;
+  });
+}
+//end sort
