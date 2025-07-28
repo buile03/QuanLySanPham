@@ -1,0 +1,118 @@
+extends ../../layouts/default
+include ../../mixins/filterStatus
+include ../../mixins/search
+include ../../mixins/pagination
+include ../../mixins/form-change-multi
+include ../../mixins/alert
+include ../../mixins/sort
+
+block main
+  h1.mb-4.text-primary Trang danh sách danh mục sản phẩm
+  +alert-success("5000")
+
+  .row.mb-3.align-items-center
+    .col-md-4
+      +filter-status(filterStatus)
+    .col-md-4
+      +search(query.keyword, query.status)
+    .col-md-4.text-right
+      a.btn.btn-primary(href=`${prefixAdmin}/products-category/create`) 
+        i.fas.fa-plus.mr-2
+        | Thêm mới
+  .row.mb-3
+    .col-md-4
+      +sort()
+  
+  +form-change-multi(`${prefixAdmin}/products-category/change-multi`)
+    table.table.table-hover.table-bordered.table-sm.align-middle
+      thead.thead-dark
+        tr.text-center
+          th(style="width: 50px")
+            input(type="checkbox", name="checkall")
+          th(style="width: 60px") Hình
+          th(style="min-width: 150px") Tên danh mục
+          th(style="min-width: 200px") Mô tả
+          th Vị trí 
+          th Trạng thái
+          th(style="width: 120px") Thao tác
+      tbody
+        each item, index in record
+          tr
+            td.text-center
+              input(type="checkbox", name="id", value=item._id)
+            td.text-center
+              if item.thumbnail
+                img(
+                  src=`/${item.thumbnail}`,
+                  alt="Thumbnail",
+                  class="img-thumbnail",
+                  style="width: 50px; height: 50px; object-fit: cover;"
+                )
+              else
+                span No image
+            td #{item.title}
+            td
+              if item.description && item.description.length > 100
+                span(title=item.description)!= item.description.substring(0, 100) + '...'
+              else if item.description
+                != item.description
+              else
+                span No description
+            td 
+              input(
+                type="number",
+                value=item.position
+                style="width:60px"
+                min="1",
+                name="position"
+              )
+            td.text-center
+              if item.status == "active"
+                a(
+                  href="javascript:;",
+                  data-status="active",
+                  data-id=item._id,
+                  button-change-status="",
+                  class="badge badge-success"
+                ) Hiển thị
+              else
+                a(
+                  href="javascript:;",
+                  data-status="inactive",
+                  data-id=item._id,
+                  button-change-status="",
+                  class="badge badge-danger"
+                ) Ẩn
+            td.text-center
+              a(
+                href=`${prefixAdmin}/products-category/edit/${item._id}`
+                class="btn btn-warning btn-sm ml-1") Sửa
+              a(
+                href=`${prefixAdmin}/products-category/detail/${item._id}`
+                class="btn btn-primary btn-sm ml-1") Chi tiết
+              button(
+                class="btn btn-danger btn-sm ml-1"
+                button-delete
+                data-id=item._id
+              ) Xóa
+
+  +pagination(pagination)
+
+  form(
+    action="",
+    method="POST",
+    id="form-change-status",
+    data-path=`${prefixAdmin}/products-category/change-status`
+  )
+    input(type="hidden", name="_method", value="PATCH")
+    input(type="hidden", name="redirect", id="redirect-input")
+
+  form(
+    action="",
+    method="POST",
+    id="form-delete-item",
+    data-path=`${prefixAdmin}/products-category/delete`
+  )
+    input(type="hidden", name="_method", value="DELETE")
+
+  script(src="/admin/js/product-category.js")

@@ -1,0 +1,55 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  h1.mb-4.text-primary Chi tiết danh mục sản phẩm
+
+  +alert-success("5000")
+
+  .card
+    .card-header.bg-info.text-white
+      h5.mb-0 Thông tin chi tiết danh mục sản phẩm
+    .card-body
+      .row.mb-3
+        .col-md-4.text-center
+          img.img-fluid.img-thumbnail(
+            src=`/${record.thumbnail}`,
+            alt="Thumbnail sản phẩm",
+            style="max-width: 200px; object-fit: cover;"
+          )
+        .col-md-8
+          h4.text-primary #{record.title}
+          p
+            strong Mô tả:
+            | !{record.description}
+          
+          p
+            strong Vị trí hiển thị:
+            | #{record.position}
+          
+          p
+            strong Trạng thái:
+            if record.status == 'active'
+              span.badge.badge-success.ml-1 Hiển thị
+            else
+              span.badge.badge-danger.ml-1 Ẩn
+
+  .mt-4
+    a.btn.btn-secondary(href=`${prefixAdmin}/products-category`) Quay lại danh sách
+    a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products-category/edit/${record._id}`) Sửa sản phẩm
+    button.btn.btn-danger.ml-2(
+      type="button",
+      button-delete,
+      data-id=record._id
+    ) Xóa sản phẩm
+
+  //- Form delete
+  form(
+    action="",
+    method="POST",
+    id="form-delete-item",
+    data-path=`${prefixAdmin}/products-category/delete`
+  )
+    input(type="hidden", name="_method", value="DELETE")
+
+  script(src="/admin/js/product.js")
