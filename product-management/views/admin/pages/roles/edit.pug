@@ -1,0 +1,19 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  h1.mb-4.text-primary Chỉnh sửa quyền
+  +alert-error(3000)
+
+  form(method="POST", action=`${prefixAdmin}/roles/edit/${record._id}`)
+    .form-group
+      label(for="title") Tên quyền
+      input.form-control(type="text", name="title", id="title", value=record.title, required)
+
+    .form-group
+      label(for="description") Mô tả
+      textarea.form-control(name="description", id="description")= record.description
+
+
+    button.btn.btn-primary(type="submit") Cập nhật
+    a.btn.btn-secondary(href=`${prefixAdmin}/roles`) Quay lại

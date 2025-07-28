@@ -1,0 +1,60 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  h1.mb-4.text-primary Trang danh sách quyền
+  +alert-success("5000")
+
+  .row.mb-3.align-items-center
+    .col-md-4.text-right
+      a.btn.btn-primary(href=`${prefixAdmin}/roles/create`) 
+        i.fas.fa-plus.mr-2
+        | Thêm mới
+
+  table.table.table-hover.table-bordered.table-sm.align-middle
+    thead.thead-dark
+      tr.text-center
+        th STT
+        th Tiêu đề
+        th Mô tả
+        th Ngày tạo
+        th(style="width: 200px") Thao tác
+    tbody
+      if roles && roles.length > 0
+        each role, index in roles
+          tr
+            td.text-center #{index + 1}
+            td #{role.title}
+            td 
+              if role.description
+                != role.description
+              else
+                span.text-muted Không có mô tả
+          
+            td.text-center #{role.createdAt ? role.createdAt.toLocaleDateString('vi-VN') : ''}
+            td.text-center
+              a(
+                href=`${prefixAdmin}/roles/edit/${role._id}`
+                class="btn btn-warning btn-sm ml-1") Sửa
+              a(
+                href=`${prefixAdmin}/roles/detail/${role._id}`
+                class="btn btn-primary btn-sm ml-1") Chi tiết
+              button(
+                class="btn btn-danger btn-sm ml-1"
+                button-delete
+                data-id=role._id
+              ) Xóa
+      else
+        tr
+          td.text-center(colspan="6") Không có dữ liệu
+
+  //--- Form xóa quyền
+  form(
+    action="",
+    method="POST",
+    id="form-delete-item",
+    data-path=`${prefixAdmin}/roles/delete`
+  )
+    input(type="hidden", name="_method", value="DELETE")
+
+  script(src="/admin/js/product.js")

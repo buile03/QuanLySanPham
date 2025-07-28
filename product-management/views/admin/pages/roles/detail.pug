@@ -1,0 +1,26 @@
+extends ../../layouts/default
+
+block main
+  h1.mb-4.text-primary Chi tiết quyền: #{record.title}
+
+  .card
+    .card-body
+      p
+        strong Tên quyền:
+        |  #{record.title}
+      p
+        strong Mô tả:
+        |  #{record.description || 'Không có'}
+      p
+        strong Quyền:
+      ul
+        each perm in record.permissions
+          li= perm
+      p
+        strong Ngày tạo:
+        |  #{new Date(record.createdAt).toLocaleString()}
+      p
+        strong Cập nhật lần cuối:
+        |  #{new Date(record.updatedAt).toLocaleString()}
+
+  a.btn.btn-secondary(href=`${prefixAdmin}/roles`) Quay lại

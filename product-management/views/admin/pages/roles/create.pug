@@ -1,0 +1,18 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  h1.mb-4.text-primary Thêm quyền mới
+  +alert-error(3000)
+
+  form(method="POST", action=`${prefixAdmin}/roles/create`)
+    .form-group
+      label(for="title") Tên quyền
+      input.form-control(type="text", name="title", id="title", required)
+
+    .form-group
+      label(for="description") Mô tả
+      textarea.form-control(name="description", id="description")
+
+    button.btn.btn-primary(type="submit") Lưu
+    a.btn.btn-secondary(href=`${prefixAdmin}/roles`) Quay lại
