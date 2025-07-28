@@ -25,6 +25,7 @@
     "multer": "^2.0.2",
     "pug": "^3.0.3",
     "serverless-http": "^3.2.0",
+    "tinymce": "^5.10.6",
     "vercel": "^44.6.3"
   },
   "devDependencies": {

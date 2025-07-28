@@ -50,6 +50,13 @@ app.use(
 );
 app.use(flash());
 
+// tiny mce
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
+// end tiny mce
+
 // Cấu hình router cho client và admin
 app.use("/", routerClient);
 app.use(systemConfig.prefixAdmin, routerAdmin); // Sử dụng prefixAdmin từ config

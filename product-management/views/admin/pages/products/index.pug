@@ -50,12 +50,13 @@ block main
                 class="img-thumbnail",
                 style="width: 50px; height: 50px; object-fit: cover;"
               )
-            td #{product.title}
+            td {product.title}
             td
               if product.description.length > 100
-                span(title=product.description)= product.description.substring(0, 100) + '...'
+                span(title=product.description)!= product.description.substring(0, 100) + '...'
               else
-                = product.description
+                != product.description
+
             td #{product.price.toLocaleString()}đ
             td 
               input(

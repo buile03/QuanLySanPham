@@ -13,7 +13,7 @@ block main
             a(href=`/product/detail/${item.slug}`)
               h3.product-title= item.title
 
-            p.product-description= item.description
+            p.product-description!= item.description
             p.price-new
               | Giá mới: 
               strong.text-danger #{item.newPrice.toLocaleString()} VNĐ
