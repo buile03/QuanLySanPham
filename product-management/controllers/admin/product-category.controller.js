@@ -32,11 +32,28 @@ module.exports.index = async (req, res) => {
       sort.position = "desc";
     }
     //end sort
-    const record = await ProductCategory.find(filter)
-      .sort(sort)
-      .skip(pagination.skip)
-      .limit(pagination.limit);
+    const flatRecords = await ProductCategory.find(filter).sort(sort);
+    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
+      const tree = [];
+      arr.forEach((item) => {
+        if (item.parent_id === parentId) {
+          const newItem = {
+            ...item.toObject(),
+            id: item._id.toString(),
+            indent,
+          };
+          const children = createTreeWithIndent(
+            arr,
+            item._id.toString(),
+            indent + 1
+          );
+          tree.push(newItem, ...children);
+        }
+      });
+      return tree;
+    };
 
+    const record = createTreeWithIndent(flatRecords);
     res.render("admin/pages/products-category/index", {
       pageTitle: "Danh sách sản phẩm",
       record,
@@ -106,15 +123,36 @@ module.exports.changeMulti = async (req, res) => {
     res.redirect("/admin/products-category"); // fallback nếu có lỗi
   }
 };
-
 // [GET] /admin/product-category/create
 module.exports.create = async (req, res) => {
   try {
+    const records = await ProductCategory.find({ deleted: false });
+
+    // Hàm tạo cây danh mục với thụt lề
+    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
+      const tree = [];
+      arr.forEach((item) => {
+        if (item.parent_id === parentId) {
+          const newItem = {
+            ...item.toObject(), // Chuyển Mongoose document thành plain object
+            id: item._id.toString(),
+            indent: indent,
+          };
+          const children = createTreeWithIndent(arr, item.id, indent + 1);
+          tree.push(newItem, ...children);
+        }
+      });
+      return tree;
+    };
+
+    const hierarchicalRecords = createTreeWithIndent(records);
+
     res.render("admin/pages/products-category/create", {
       pageTitle: "Thêm mới danh mục sản phẩm",
+      records: hierarchicalRecords,
     });
   } catch (err) {
-    console.error("Product List Error:", err);
+    console.error("Product Category Error:", err);
     res.status(500).send("Lỗi server");
   }
 };
@@ -164,19 +202,52 @@ module.exports.createPost = async (req, res) => {
 // [GET] /admin/product-category/edit/:id
 module.exports.edit = async (req, res) => {
   try {
-    const find = {
+    const id = req.params.id;
+
+    const record = await ProductCategory.findOne({
       deleted: false,
-      _id: req.params.id,
+      _id: id,
+    });
+
+    if (!record) {
+      req.flash("error", "Không tìm thấy danh mục");
+      return res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+    }
+
+    const allCategories = await ProductCategory.find({
+      deleted: false,
+      _id: { $ne: id },
+    });
+
+    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
+      const tree = [];
+      arr.forEach((item) => {
+        if (item.parent_id === parentId) {
+          const newItem = {
+            ...item.toObject(),
+            id: item._id.toString(),
+            indent,
+          };
+          const children = createTreeWithIndent(
+            arr,
+            item._id.toString(),
+            indent + 1
+          );
+          tree.push(newItem, ...children);
+        }
+      });
+      return tree;
     };
 
-    const record = await ProductCategory.findOne(find);
+    const hierarchicalRecords = createTreeWithIndent(allCategories);
 
     res.render("admin/pages/products-category/edit", {
       pageTitle: "Chỉnh sửa danh mục sản phẩm",
-      record: record,
+      record,
+      records: hierarchicalRecords,
     });
   } catch (err) {
-    console.error("Product List Error:", err);
+    console.error("Product Edit Error:", err);
     res.status(500).send("Lỗi server");
   }
 };

@@ -1,0 +1,5 @@
+mixin select-tree(items)
+   each item in items
+    option(value=item.id) 
+      //- Thêm dấu gạch ngang để thể hiện phân cấp
+      = '— '.repeat(item.indent) + item.title

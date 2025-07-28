@@ -9,3 +9,15 @@ mixin sort()
       option(value="title-asc" selected=(query.sortKey == "title" && query.sortValue == "asc")) Tiêu đề A - Z
       option(value="title-desc" selected=(query.sortKey == "title" && query.sortValue == "desc")) Tiêu đề Z - A
     button.btn.btn-danger.mt-2(type="button", sort-clear) Clear
+
+
+mixin sort_danhmuc()
+  div(sort)
+    select.form-control(sort-select)
+      option(value="") -- Sắp xếp --
+      option(value="position-desc" selected=(query.sortKey == "position" && query.sortValue == "desc")) Vị trí giảm dần
+      option(value="position-asc" selected=(query.sortKey == "position" && query.sortValue == "asc")) Vị trí tăng dần
+      option(value="title-asc" selected=(query.sortKey == "title" && query.sortValue == "asc")) Tiêu đề A - Z
+      option(value="title-desc" selected=(query.sortKey == "title" && query.sortValue == "desc")) Tiêu đề Z - A
+    button.btn.btn-danger.mt-2(type="button", sort-clear) Clear
+  

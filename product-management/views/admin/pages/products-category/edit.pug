@@ -12,6 +12,18 @@ block main
     .form-group
       label(for="title") Tên danh mục
       input.form-control(type="text", name="title", id="title", value=record.title, required)
+    .form-group
+      label(for="parent_id") Danh mục cha
+      select.form-control(name="parent_id", id="parent_id")
+        option(value="") --- Chọn danh mục cha ---
+        if records
+          each item in records
+            option(
+              value=item.id,
+              selected=(record.parent_id == item.id) ? true : undefined
+            )
+              | #{'-'.repeat(item.indent * 2)} #{item.title}
+
 
     .form-group
       label(for="description") Mô tả

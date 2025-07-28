@@ -21,7 +21,7 @@ block main
         | Thêm mới
   .row.mb-3
     .col-md-4
-      +sort()
+      +sort_danhmuc()
   
   +form-change-multi(`${prefixAdmin}/products-category/change-multi`)
     table.table.table-hover.table-bordered.table-sm.align-middle
@@ -34,7 +34,7 @@ block main
           th(style="min-width: 200px") Mô tả
           th Vị trí 
           th Trạng thái
-          th(style="width: 120px") Thao tác
+          th(style="width: 200px") Thao tác
       tbody
         each item, index in record
           tr
@@ -50,11 +50,10 @@ block main
                 )
               else
                 span No image
-            td #{item.title}
+            td 
+              = '— '.repeat(item.indent) + ' ' + item.title
             td
-              if item.description && item.description.length > 100
-                span(title=item.description)!= item.description.substring(0, 100) + '...'
-              else if item.description
+              if item.description
                 != item.description
               else
                 span No description
