@@ -1,5 +1,6 @@
 extends ../../layouts/default
 include ../../mixins/alert
+include ../../mixins/select-tree
 block main
   h1.mb-4.text-primary Thêm sản phẩm mới
   +alert-error(3000)
@@ -7,6 +8,12 @@ block main
     .form-group
       label(for="title") Tên sản phẩm
       input.form-control(type="text", name="title", id="title")
+    .form-group
+      label(for="product_category_id") Thuộc danh mục
+      select.form-control(name="product_category_id", id="product_category_id")
+        option(value="") --- Chọn danh mục ---
+        if categories
+          +select-tree(categories)
 
     .form-group
       label(for="desc") Mô tả

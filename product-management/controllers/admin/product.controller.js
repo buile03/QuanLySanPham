@@ -3,6 +3,10 @@ const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const systemConfig = require("../../config/system");
+
+const { createTreeWithIndent } = require("../../helpers/categoryTreeHelper");
+const ProductCategory = require("../../models/product-category.model");
+
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
   try {
@@ -137,8 +141,11 @@ module.exports.deleteItem = async (req, res) => {
 // [GET] /admin/product/create
 module.exports.create = async (req, res) => {
   try {
+    const categories = await ProductCategory.find({ deleted: false });
+    const treeCategories = createTreeWithIndent(categories);
     res.render("admin/pages/products/create", {
       pageTitle: "Thêm mới sản phẩm",
+      categories: treeCategories,
     });
   } catch (err) {
     console.error("Product List Error:", err);
@@ -175,6 +182,7 @@ module.exports.createPost = async (req, res) => {
 
     const newProduct = new Product({
       title,
+      product_category_id: req.body.product_category_id || null,
       description,
       price: parseInt(price),
       discountPercentage: parseFloat(discountPercentage) || 0,
@@ -204,10 +212,12 @@ module.exports.edit = async (req, res) => {
     };
 
     const product = await Product.findOne(find);
-
+    const categories = await ProductCategory.find({ deleted: false });
+    const treeCategories = createTreeWithIndent(categories);
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product: product,
+      categories: treeCategories,
     });
   } catch (err) {
     console.error("Product List Error:", err);
@@ -238,6 +248,7 @@ module.exports.editPatch = async (req, res) => {
     // Chuẩn bị dữ liệu cập nhật
     const updateData = {
       title,
+      product_category_id: req.body.product_category_id || null,
       description,
       price: parseInt(price) || 0,
       discountPercentage: parseFloat(discountPercentage) || 0,

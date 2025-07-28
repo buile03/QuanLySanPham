@@ -5,6 +5,8 @@ const paginationHelper = require("../../helpers/pagination");
 const systemConfig = require("../../config/system");
 const { proppatch } = require("../../routers/admin/dashboard.router");
 
+const { createTreeWithIndent } = require("../../helpers/categoryTreeHelper");
+
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
   try {
@@ -33,27 +35,8 @@ module.exports.index = async (req, res) => {
     }
     //end sort
     const flatRecords = await ProductCategory.find(filter).sort(sort);
-    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
-      const tree = [];
-      arr.forEach((item) => {
-        if (item.parent_id === parentId) {
-          const newItem = {
-            ...item.toObject(),
-            id: item._id.toString(),
-            indent,
-          };
-          const children = createTreeWithIndent(
-            arr,
-            item._id.toString(),
-            indent + 1
-          );
-          tree.push(newItem, ...children);
-        }
-      });
-      return tree;
-    };
-
     const record = createTreeWithIndent(flatRecords);
+
     res.render("admin/pages/products-category/index", {
       pageTitle: "Danh sách sản phẩm",
       record,
@@ -127,24 +110,6 @@ module.exports.changeMulti = async (req, res) => {
 module.exports.create = async (req, res) => {
   try {
     const records = await ProductCategory.find({ deleted: false });
-
-    // Hàm tạo cây danh mục với thụt lề
-    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
-      const tree = [];
-      arr.forEach((item) => {
-        if (item.parent_id === parentId) {
-          const newItem = {
-            ...item.toObject(), // Chuyển Mongoose document thành plain object
-            id: item._id.toString(),
-            indent: indent,
-          };
-          const children = createTreeWithIndent(arr, item.id, indent + 1);
-          tree.push(newItem, ...children);
-        }
-      });
-      return tree;
-    };
-
     const hierarchicalRecords = createTreeWithIndent(records);
 
     res.render("admin/pages/products-category/create", {
@@ -218,26 +183,6 @@ module.exports.edit = async (req, res) => {
       deleted: false,
       _id: { $ne: id },
     });
-
-    const createTreeWithIndent = (arr, parentId = "", indent = 0) => {
-      const tree = [];
-      arr.forEach((item) => {
-        if (item.parent_id === parentId) {
-          const newItem = {
-            ...item.toObject(),
-            id: item._id.toString(),
-            indent,
-          };
-          const children = createTreeWithIndent(
-            arr,
-            item._id.toString(),
-            indent + 1
-          );
-          tree.push(newItem, ...children);
-        }
-      });
-      return tree;
-    };
 
     const hierarchicalRecords = createTreeWithIndent(allCategories);
 

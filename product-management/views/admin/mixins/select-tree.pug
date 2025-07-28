@@ -1,5 +1,8 @@
-mixin select-tree(items)
-   each item in items
-    option(value=item.id) 
-      //- Thêm dấu gạch ngang để thể hiện phân cấp
-      = '— '.repeat(item.indent) + item.title
+
+mixin select-tree(items, parent_id = "")
+  each item in items
+    - const selected = (item.id === parent_id)
+    option(
+      value=item.id
+      selected=selected
+    ) #{'— '.repeat(item.indent)} #{item.title}
