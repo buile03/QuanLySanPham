@@ -110,3 +110,38 @@ module.exports.detail = async (req, res) => {
     res.status(500).send("Lỗi server");
   }
 };
+
+// [GET] /admin/roles/permissions
+module.exports.permissions = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+    };
+
+    const record = await Role.find(find);
+
+    res.render("admin/pages/roles/permissions", {
+      pageTitle: "Phân quyền",
+      record: record,
+    });
+  } catch (err) {
+    console.error("Role Detail Error:", err);
+    res.status(500).send("Lỗi server");
+  }
+};
+
+// [PATCH] /admin/roles/permissions
+module.exports.permissionsPatch = async (req, res) => {
+  try {
+    const permissions = JSON.parse(req.body.permissionsData);
+    for (const item of permissions) {
+      await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
+    }
+    req.flash("success", "Cập nhật phân quyền thành công");
+    res.redirect(`${systemConfig.prefixAdmin}/roles/permissions`);
+  } catch (err) {
+    console.error("Role Permissions Patch Error:", err);
+    req.flash("error", "Có lỗi xảy ra khi cập nhật quyền");
+    res.redirect(`${systemConfig.prefixAdmin}/roles/permissions`);
+  }
+};

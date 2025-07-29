@@ -15,4 +15,9 @@ router.post("/edit/:id", controller.editPost);
 
 //detail
 router.get("/detail/:id", controller.detail);
+
+//permissions
+router.get("/permissions", controller.permissions);
+router.patch("/permissions", controller.permissionsPatch);
+
 module.exports = router;

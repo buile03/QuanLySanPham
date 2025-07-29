@@ -1,0 +1,129 @@
+extends ../../layouts/default
+include ../../mixins/alert.pug
+
+block main
+  h1.mb-4.text-primary Trang danh sách quyền
+  +alert-success(5000)
+  if(record)
+    form(action=`${prefixAdmin}/roles/permissions?_method=PATCH`, method="POST", id="form-change-permissions")
+      div(class="text-right mb-3")
+        button.btn.btn-primary(type="submit", id="button-submit") 
+          | Cập nhật
+      div(data-record=record)
+      table(
+        class="table table-hover table-bordered table-sm align-middle"
+        table-permissions 
+      )
+        thead 
+          tr.text-center
+            th Tính năng 
+            each item in record 
+              th(class="text-center") #{item.title}
+
+        tbody
+          //- Hàng ID quyền
+          tr(data-name="id", class="d-none")
+            td ID
+            each item in record 
+              td(class="text-center") 
+                input.form-control.form-control-sm(type="text", value=item.id, name="ids[]", readonly)
+          
+          //- Quyền
+          tr 
+            td(colspan=record.length + 1)
+              strong Quyền
+
+          tr(data-name="roles-view")
+            td Xem
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][roles-view]`)
+
+          tr(data-name="roles-create")
+            td Thêm mới
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][roles-create]`)
+
+          tr(data-name="roles-edit")
+            td Sửa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][roles-edit]`)
+
+          tr(data-name="roles-delete")
+            td Xóa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][roles-delete]`)
+          tr(data-name="roles-permissions")
+            td Phân quyền
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][roles-permissions]`)
+
+          //- Danh mục san phẩm
+          tr 
+            td(colspan=record.length + 1)
+              strong Danh mục sản phẩm
+
+          //- Các quyền (view/create/edit/delete)
+          tr(data-name="products-category-view")
+            td Xem
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-category-view]`)
+
+          tr(data-name="products-category-create")
+            td Thêm mới
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-category-create]`)
+
+          tr(data-name="products-category-edit")
+            td Sửa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-category-edit]`)
+
+          tr(data-name="products-category-delete")
+            td Xóa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-category-delete]`)
+
+          //- Sản phẩm
+          tr 
+            td(colspan=record.length + 1)
+              strong Sản phẩm
+
+          tr(data-name="products-view")
+            td Xem
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-view]`)
+
+          tr(data-name="products-create")
+            td Thêm mới
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-create]`)
+
+          tr(data-name="products-edit")
+            td Sửa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-edit]`)
+
+          tr(data-name="products-delete")
+            td Xóa
+            each item in record 
+              td(class="text-center")
+                input(type="checkbox", name=`permissions[${item.id}][products-delete]`)
+        
+          
+
+
+      input(type="hidden", name="permissionsData", id="permissionsData")
+      
+  script(src="/admin/js/role.js")
