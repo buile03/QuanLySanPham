@@ -5,9 +5,11 @@ const dashboardRouter = require("./dashboard.router");
 const productRouter = require("./product.router");
 const productCategoryRouter = require("./product-category.router");
 const roleRouter = require("./role.router");
+const accountRouter = require("./account.router");
 
 router.use("/dashboard", dashboardRouter);
 router.use("/products", productRouter);
 router.use("/products-category", productCategoryRouter);
 router.use("/roles", roleRouter);
+router.use("/accounts", accountRouter);
 module.exports = router;
