@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../../middleware/auth.middleware");
+
 const systemConfig = require("../../config/system");
 const dashboardRouter = require("./dashboard.router");
 const productRouter = require("./product.router");
@@ -8,10 +10,14 @@ const roleRouter = require("./role.router");
 const accountRouter = require("./account.router");
 const authRouter = require("./auth.router");
 
-router.use("/dashboard", dashboardRouter);
-router.use("/products", productRouter);
-router.use("/products-category", productCategoryRouter);
-router.use("/roles", roleRouter);
-router.use("/accounts", accountRouter);
+router.use("/dashboard", authMiddleware.requireAuth, dashboardRouter);
+router.use("/products", authMiddleware.requireAuth, productRouter);
+router.use(
+  "/products-category",
+  authMiddleware.requireAuth,
+  productCategoryRouter
+);
+router.use("/roles", authMiddleware.requireAuth, roleRouter);
+router.use("/accounts", authMiddleware.requireAuth, accountRouter);
 router.use("/auth", authRouter);
 module.exports = router;
