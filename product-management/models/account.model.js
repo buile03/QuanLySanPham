@@ -10,7 +10,7 @@ const accountSchema = new mongoose.Schema(
     address: String,
     token: {
       type: String,
-      default: generate.generateToken(),
+      default: () => generate.generateToken(),
     },
     role_id: {
       type: String,

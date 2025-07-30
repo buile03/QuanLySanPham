@@ -1,55 +1,59 @@
 extends ../../layouts/default
 include ../../mixins/alert
+include ../../mixins/noAccess
 
 block main
-  h1.mb-4.text-primary Chi tiết tài khoản
+  if role && role.permissions && role.permissions.includes('account-view')
+    h1.mb-4.text-primary Chi tiết tài khoản
 
-  +alert-success("5000")
+    +alert-success("5000")
 
-  .card
-    .card-header.bg-info.text-white
-      h5.mb-0 Thông tin chi tiết tài khoản
-    .card-body
-      .row.mb-3
-        .col-md-4.text-center
-          img.img-fluid.img-thumbnail(
-            src=`/${record.avatar}`,
-            alt="Ảnh đại diện",
-            style="max-width: 200px; object-fit: cover;"
-          )
-        .col-md-8
-          h4.text-primary #{record.fullName}
-          p
-            strong Email:
-            | !{record.email}
-          
-          p
-            strong Địa chỉ:
-            | #{record.address || 'Chưa cập nhật'}
-          
-          p
-            strong Trạng thái:
-            if record.status == 'active'
-              span.badge.badge-success.ml-1 Hiển thị
-            else
-              span.badge.badge-danger.ml-1 Ẩn
+    .card
+      .card-header.bg-info.text-white
+        h5.mb-0 Thông tin chi tiết tài khoản
+      .card-body
+        .row.mb-3
+          .col-md-4.text-center
+            img.img-fluid.img-thumbnail(
+              src=`/${record.avatar}`,
+              alt="Ảnh đại diện",
+              style="max-width: 200px; object-fit: cover;"
+            )
+          .col-md-8
+            h4.text-primary #{record.fullName}
+            p
+              strong Email:
+              | !{record.email}
+            
+            p
+              strong Địa chỉ:
+              | #{record.address || 'Chưa cập nhật'}
+            
+            p
+              strong Trạng thái:
+              if record.status == 'active'
+                span.badge.badge-success.ml-1 Hiển thị
+              else
+                span.badge.badge-danger.ml-1 Ẩn
 
-  .mt-4
-    a.btn.btn-secondary(href=`${prefixAdmin}/accounts`) Quay lại danh sách
-    a.btn.btn-warning.ml-2(href=`${prefixAdmin}/accounts/edit/${record._id}`) Sửa tài khoản
-    button.btn.btn-danger.ml-2(
-      type="button",
-      button-delete,
-      data-id=record._id
-    ) Xóa tài khoản
+    .mt-4
+      a.btn.btn-secondary(href=`${prefixAdmin}/accounts`) Quay lại danh sách
+      a.btn.btn-warning.ml-2(href=`${prefixAdmin}/accounts/edit/${record._id}`) Sửa tài khoản
+      button.btn.btn-danger.ml-2(
+        type="button",
+        button-delete,
+        data-id=record._id
+      ) Xóa tài khoản
 
-  //- Form delete
-  form(
-    action="",
-    method="POST",
-    id="form-delete-item",
-    data-path=`${prefixAdmin}/accounts/delete`
-  )
-    input(type="hidden", name="_method", value="DELETE")
+    //- Form delete
+    form(
+      action="",
+      method="POST",
+      id="form-delete-item",
+      data-path=`${prefixAdmin}/accounts/delete`
+    )
+      input(type="hidden", name="_method", value="DELETE")
 
-  script(src="/admin/js/product.js")
+    script(src="/admin/js/product.js")
+  else
+    +noAccess()

@@ -1,62 +1,66 @@
 extends ../../layouts/default
 include ../../mixins/alert
+include ../../mixins/noAccess
 
 block main
-  h1.mb-4.text-primary Chi tiết sản phẩm
+  if role && role.permissions && role.permissions.includes('products-view')
+    h1.mb-4.text-primary Chi tiết sản phẩm
 
-  +alert-success("5000")
+    +alert-success("5000")
 
-  .card
-    .card-header.bg-info.text-white
-      h5.mb-0 Thông tin chi tiết sản phẩm
-    .card-body
-      .row.mb-3
-        .col-md-4.text-center
-          img.img-fluid.img-thumbnail(
-            src=`/${product.thumbnail}`,
-            alt="Thumbnail sản phẩm",
-            style="max-width: 200px; object-fit: cover;"
-          )
-        .col-md-8
-          h4.text-primary #{product.title}
-          p
-            strong Mô tả:
-            | !{product.description}
-          p
-            strong Giá:
-            | #{product.price.toLocaleString()}đ
-          p
-            strong Giảm giá:
-            | #{product.discountPercentage}%
-          p
-            strong Vị trí hiển thị:
-            | #{product.position}
-          p
-            strong Tồn kho:
-            | #{product.stock}
-          p
-            strong Trạng thái:
-            if product.status == 'active'
-              span.badge.badge-success.ml-1 Hiển thị
-            else
-              span.badge.badge-danger.ml-1 Ẩn
+    .card
+      .card-header.bg-info.text-white
+        h5.mb-0 Thông tin chi tiết sản phẩm
+      .card-body
+        .row.mb-3
+          .col-md-4.text-center
+            img.img-fluid.img-thumbnail(
+              src=`/${product.thumbnail}`,
+              alt="Thumbnail sản phẩm",
+              style="max-width: 200px; object-fit: cover;"
+            )
+          .col-md-8
+            h4.text-primary #{product.title}
+            p
+              strong Mô tả:
+              | !{product.description}
+            p
+              strong Giá:
+              | #{product.price.toLocaleString()}đ
+            p
+              strong Giảm giá:
+              | #{product.discountPercentage}%
+            p
+              strong Vị trí hiển thị:
+              | #{product.position}
+            p
+              strong Tồn kho:
+              | #{product.stock}
+            p
+              strong Trạng thái:
+              if product.status == 'active'
+                span.badge.badge-success.ml-1 Hiển thị
+              else
+                span.badge.badge-danger.ml-1 Ẩn
 
-  .mt-4
-    a.btn.btn-secondary(href=`${prefixAdmin}/products`) Quay lại danh sách
-    a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products/edit/${product._id}`) Sửa sản phẩm
-    button.btn.btn-danger.ml-2(
-      type="button",
-      button-delete,
-      data-id=product._id
-    ) Xóa sản phẩm
+    .mt-4
+      a.btn.btn-secondary(href=`${prefixAdmin}/products`) Quay lại danh sách
+      a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products/edit/${product._id}`) Sửa sản phẩm
+      button.btn.btn-danger.ml-2(
+        type="button",
+        button-delete,
+        data-id=product._id
+      ) Xóa sản phẩm
 
-  //- Form delete
-  form(
-    action="",
-    method="POST",
-    id="form-delete-item",
-    data-path=`${prefixAdmin}/products/delete`
-  )
-    input(type="hidden", name="_method", value="DELETE")
+    //- Form delete
+    form(
+      action="",
+      method="POST",
+      id="form-delete-item",
+      data-path=`${prefixAdmin}/products/delete`
+    )
+      input(type="hidden", name="_method", value="DELETE")
 
-  script(src="/admin/js/product.js")
+    script(src="/admin/js/product.js")
+  else
+    +noAccess()

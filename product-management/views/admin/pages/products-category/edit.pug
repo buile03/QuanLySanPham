@@ -1,59 +1,63 @@
 extends ../../layouts/default
 include ../../mixins/alert
+include ../../mixins/noAccess
 
 block main
-  h1.mb-4.text-primary Chỉnh sửa danh mục sản phẩm
+  if role && role.permissions && role.permissions.includes('products-category-view')
+    h1.mb-4.text-primary Chỉnh sửa danh mục sản phẩm
 
-  +alert-error(3000)
-  +alert-success(3000)
+    +alert-error(3000)
+    +alert-success(3000)
 
-  form(method="POST", action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH` enctype="multipart/form-data")
-    
-    .form-group
-      label(for="title") Tên danh mục
-      input.form-control(type="text", name="title", id="title", value=record.title, required)
-    .form-group
-      label(for="parent_id") Danh mục cha
-      select.form-control(name="parent_id", id="parent_id")
-        option(value="") --- Chọn danh mục cha ---
-        if records
-          each item in records
-            option(
-              value=item.id,
-              selected=(record.parent_id == item.id) ? true : undefined
-            )
-              | #{'-'.repeat(item.indent * 2)} #{item.title}
+    form(method="POST", action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH` enctype="multipart/form-data")
+      
+      .form-group
+        label(for="title") Tên danh mục
+        input.form-control(type="text", name="title", id="title", value=record.title, required)
+      .form-group
+        label(for="parent_id") Danh mục cha
+        select.form-control(name="parent_id", id="parent_id")
+          option(value="") --- Chọn danh mục cha ---
+          if records
+            each item in records
+              option(
+                value=item.id,
+                selected=(record.parent_id == item.id) ? true : undefined
+              )
+                | #{'-'.repeat(item.indent * 2)} #{item.title}
 
 
-    .form-group
-      label(for="description") Mô tả
-      textarea.form-control(name="description", id="description", rows="4")= record.description
+      .form-group
+        label(for="description") Mô tả
+        textarea.form-control(name="description", id="description", rows="4")= record.description
 
-    .form-group
-      label(for="position") Vị trí
-      input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng", value=record.position)
+      .form-group
+        label(for="position") Vị trí
+        input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng", value=record.position)
 
-    .form-group
-      label(for="thumbnail") Ảnh đại diện
-      input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
-      br
-      if record.thumbnail
-        img#preview-img(src=`/${record.thumbnail}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
+      .form-group
+        label(for="thumbnail") Ảnh đại diện
+        input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
         br
-        button#remove-btn(type="button", class="btn btn-sm btn-danger mt-2") Xóa ảnh
-        input(type="hidden", name="currentThumbnail", value=record.thumbnail)
-      else
-        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
-        br
-        button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+        if record.thumbnail
+          img#preview-img(src=`/${record.thumbnail}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
+          br
+          button#remove-btn(type="button", class="btn btn-sm btn-danger mt-2") Xóa ảnh
+          input(type="hidden", name="currentThumbnail", value=record.thumbnail)
+        else
+          img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+          br
+          button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
 
-    .form-group
-      label(for="status") Trạng thái
-      select.form-control(name="status", id="status")
-        option(value="active", selected=record.status == 'active') Hiển thị
-        option(value="inactive", selected=record.status == 'inactive') Ẩn
+      .form-group
+        label(for="status") Trạng thái
+        select.form-control(name="status", id="status")
+          option(value="active", selected=record.status == 'active') Hiển thị
+          option(value="inactive", selected=record.status == 'inactive') Ẩn
 
-    button.btn.btn-primary(type="submit") Cập nhật
-    a.btn.btn-secondary.ml-2(href=`${prefixAdmin}/products-category`) Quay lại
+      button.btn.btn-primary(type="submit") Cập nhật
+      a.btn.btn-secondary.ml-2(href=`${prefixAdmin}/products-category`) Quay lại
 
-  script(src="/admin/js/product.js")
+    script(src="/admin/js/product.js")
+  else
+    +noAccess()

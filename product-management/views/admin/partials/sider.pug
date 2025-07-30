@@ -1,18 +1,25 @@
+
 aside.sidebar.bg-light.border-right.p-3(style="width: 220px; min-height: 100vh")
   nav
     ul.nav.flex-column
       li.nav-item
-        a.nav-link(href=`${prefixAdmin}/dashboard`) 📊 Trang tổng quan
-      li.nav-item
-        a.nav-link(href="/admin/products-category") Danh mục sản phẩm
-      li.nav-item
-        a.nav-link(href="/admin/roles") Danh sách quyền
-      li.nav-item
-        a.nav-link(href="/admin/roles/permissions") Phân quyền
-      li.nav-item
-        a.nav-link(href="/admin/accounts") Danh sách tài khoản
-      li.nav-item
-        a.nav-link(href="/admin/products") 🛒 Danh sách sản phẩm
-      li.nav-item
-        a.nav-link(href="/admin/categories") 📦 Quản lý danh mục
-      
+        a.nav-link(href=`${prefixAdmin}/dashboard`) Trang tổng quan
+
+      if role && role.permissions && role.permissions.includes('products-view')
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/products`) Danh sách sản phẩm
+
+      if role && role.permissions && role.permissions.includes('products-category-view')
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
+
+      if role && role.permissions && role.permissions.includes('roles-view')
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/roles`) Danh sách quyền
+
+      if role && role.permissions && role.permissions.includes('account-view')
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/accounts`) Danh sách tài khoản
+      if role && role.permissions && role.permissions.includes('roles-permissions')
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/roles/permissions`) Phân quyền

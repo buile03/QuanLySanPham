@@ -8,23 +8,28 @@ html
     link(rel="stylesheet", href="/admin/css/style.css")
   
   body 
-    .wrapper.d-flex.flex-column.min-vh-100
-      include ../partials/header.pug
+    if role && role.permissions && role.permissions.length > 0
+      .wrapper.d-flex.flex-column.min-vh-100
+        include ../partials/header.pug
 
-      .flex-grow-1.d-flex
-        include ../partials/sider.pug
+        .flex-grow-1.d-flex
+          include ../partials/sider.pug
 
-        .main.flex-grow-1.p-4
-          block main
+          .main.flex-grow-1.p-4
+            block main
 
-      include ../partials/footer.pug    
+        include ../partials/footer.pug    
 
-    script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
+      script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
+      script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
 
-    //- tinymce
-    script(src="/tinymce/tinymce.min.js")
-    script(src="/admin/js/tinymce-config.js")
-    //- end tinymce
+      //- tinymce
+      script(src="/tinymce/tinymce.min.js")
+      script(src="/admin/js/tinymce-config.js")
+      //- end tinymce
 
-    script(src="/admin/js/script.js")
+      script(src="/admin/js/script.js")
+    else
+      .container.text-center.mt-5
+        h1 Access Denied
+        p You do not have permission to view this page.

@@ -1,55 +1,60 @@
 extends ../../layouts/default
 include ../../mixins/alert
 include ../../mixins/select-tree
+include ../../mixins/noAccess
+
 block main
-  h1.mb-4.text-primary Thêm sản phẩm mới
-  +alert-error(3000)
-  form(method="POST", action=`${prefixAdmin}/products/create` enctype="multipart/form-data")
-    .form-group
-      label(for="title") Tên sản phẩm
-      input.form-control(type="text", name="title", id="title")
-    .form-group
-      label(for="product_category_id") Thuộc danh mục
-      select.form-control(name="product_category_id", id="product_category_id")
-        option(value="") --- Chọn danh mục ---
-        if categories
-          +select-tree(categories)
+  if role && role.permissions && role.permissions.includes('products-create')
+    h1.mb-4.text-primary Thêm sản phẩm mới
+    +alert-error(3000)
+    form(method="POST", action=`${prefixAdmin}/products/create` enctype="multipart/form-data")
+      .form-group
+        label(for="title") Tên sản phẩm
+        input.form-control(type="text", name="title", id="title")
+      .form-group
+        label(for="product_category_id") Thuộc danh mục
+        select.form-control(name="product_category_id", id="product_category_id")
+          option(value="") --- Chọn danh mục ---
+          if categories
+            +select-tree(categories)
 
-    .form-group
-      label(for="desc") Mô tả
-      textarea.form-control(name="description", id="description")
-      //- textarea.form-control.tinymce(name="description", id="description")  // thêm class để chỉ định textarea nào sử dụng tinymce
-    .form-group
-      label(for="price") Giá
-      input.form-control(type="number", name="price", id="price", step="1000")
+      .form-group
+        label(for="desc") Mô tả
+        textarea.form-control(name="description", id="description")
+        //- textarea.form-control.tinymce(name="description", id="description")  // thêm class để chỉ định textarea nào sử dụng tinymce
+      .form-group
+        label(for="price") Giá
+        input.form-control(type="number", name="price", id="price", step="1000")
 
-    .form-group
-      label(for="discount") Giảm giá (%)
-      input.form-control(type="number", name="discountPercentage", id="discount", step="1", min="0", max="100")
+      .form-group
+        label(for="discount") Giảm giá (%)
+        input.form-control(type="number", name="discountPercentage", id="discount", step="1", min="0", max="100")
 
-    .form-group
-      label(for="stock") Tồn kho
-      input.form-control(type="number", name="stock", id="stock", min="0")
+      .form-group
+        label(for="stock") Tồn kho
+        input.form-control(type="number", name="stock", id="stock", min="0")
 
-    .form-group
-      label(for="position") Vị trí
-      input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng")
+      .form-group
+        label(for="position") Vị trí
+        input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng")
 
-    .form-group
-      label(for="thumbnail") Ảnh đại diện
-      input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
-      br
-      img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
-      br
-      button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+      .form-group
+        label(for="thumbnail") Ảnh đại diện
+        input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
+        br
+        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+        br
+        button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
 
-    .form-group
-      label(for="status") Trạng thái
-      select.form-control(name="status", id="status")
-        option(value="active") Hiển thị
-        option(value="inactive") Ẩn
+      .form-group
+        label(for="status") Trạng thái
+        select.form-control(name="status", id="status")
+          option(value="active") Hiển thị
+          option(value="inactive") Ẩn
 
-    button.btn.btn-primary(type="submit") Lưu
-    a.btn.btn-secondary(href=`${prefixAdmin}/products`) Quay lại
+      button.btn.btn-primary(type="submit") Lưu
+      a.btn.btn-secondary(href=`${prefixAdmin}/products`) Quay lại
 
-  script(src="/admin/js/product.js")
+    script(src="/admin/js/product.js")
+  else
+    +noAccess()

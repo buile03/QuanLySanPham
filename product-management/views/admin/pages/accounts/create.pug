@@ -1,50 +1,54 @@
 extends ../../layouts/default
 include ../../mixins/alert
+include ../../mixins/noAccess
 
 block main
-  h1.mb-4.text-primary Thêm tài khoản mới
-  +alert-error(3000)
+  if role && role.permissions && role.permissions.includes('account-create')
+    h1.mb-4.text-primary Thêm tài khoản mới
+    +alert-error(3000)
 
-  form(method="POST", action=`${prefixAdmin}/accounts/create`, enctype="multipart/form-data")
-    .form-group
-      label(for="fullName") Họ và tên
-      input.form-control(type="text", name="fullName", id="fullName", required)
+    form(method="POST", action=`${prefixAdmin}/accounts/create`, enctype="multipart/form-data")
+      .form-group
+        label(for="fullName") Họ và tên
+        input.form-control(type="text", name="fullName", id="fullName", required)
 
-    .form-group
-      label(for="email") Email
-      input.form-control(type="email", name="email", id="email", required)
+      .form-group
+        label(for="email") Email
+        input.form-control(type="email", name="email", id="email", required)
 
-    .form-group
-      label(for="password") Mật khẩu
-      input.form-control(type="password", name="password", id="password", required)
+      .form-group
+        label(for="password") Mật khẩu
+        input.form-control(type="password", name="password", id="password", required)
 
-    .form-group
-      label(for="phone") Số điện thoại
-      input.form-control(type="text", name="phone", id="phone", required)
-    .form-group
-      label(for="address") Địa chỉ
-      input.form-control(type="text", name="address", id="address", required)
+      .form-group
+        label(for="phone") Số điện thoại
+        input.form-control(type="text", name="phone", id="phone", required)
+      .form-group
+        label(for="address") Địa chỉ
+        input.form-control(type="text", name="address", id="address", required)
 
-    .form-group
-      label(for="role_id") Quyền
-      select.form-control(name="role_id", id="role_id", required)
-        option(value="") -- Chọn quyền --
-        each role in roles
-          option(value=role._id)= role.title
-    .form-group
-      label(for="thumbnail") Ảnh đại diện
-      input.form-control-file(type="file", name="avatar", id="thumbnail", accept="image/*")
-      br
-      img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
-      br
-      button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+      .form-group
+        label(for="role_id") Quyền
+        select.form-control(name="role_id", id="role_id", required)
+          option(value="") -- Chọn quyền --
+          each role in roles
+            option(value=role._id)= role.title
+      .form-group
+        label(for="thumbnail") Ảnh đại diện
+        input.form-control-file(type="file", name="avatar", id="thumbnail", accept="image/*")
+        br
+        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+        br
+        button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
 
-    .form-group
-      label(for="status") Trạng thái
-      select.form-control(name="status", id="status")
-        option(value="active") Hiển thị
-        option(value="inactive") Ẩn
+      .form-group
+        label(for="status") Trạng thái
+        select.form-control(name="status", id="status")
+          option(value="active") Hiển thị
+          option(value="inactive") Ẩn
 
-    button.btn.btn-primary(type="submit") Lưu
-    a.btn.btn-secondary(href=`${prefixAdmin}/accounts`) Quay lại
+      button.btn.btn-primary(type="submit") Lưu
+      a.btn.btn-secondary(href=`${prefixAdmin}/accounts`) Quay lại
+  else 
+    +noAccess()
 

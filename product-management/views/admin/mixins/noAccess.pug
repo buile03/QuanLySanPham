@@ -1,0 +1,6 @@
+mixin noAccess(message)
+  .d-flex.justify-content-center.align-items-center.mt-5(style="min-height: 300px;")
+    .text-center
+      i.fas.fa-lock.fa-3x.text-danger.mb-3
+      h2.text-danger #{message || "Bạn không có quyền truy cập."}
+      p.text-muted Vui lòng liên hệ quản trị viên để được cấp quyền.
