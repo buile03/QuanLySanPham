@@ -1,0 +1,42 @@
+extends ../../layouts/default
+include ../../mixins/alert
+include ../../mixins/noAccess
+
+block main
+  h1.mb-4.text-primary Chi tiết tài khoản
+
+  +alert-success("5000")
+
+  .card
+    .card-header.bg-info.text-white
+      h5.mb-0 Thông tin chi tiết tài khoản
+    .card-body
+      .row.mb-3
+        .col-md-4.text-center
+          img.img-fluid.img-thumbnail(
+            src=`/${user.avatar}`,
+            alt="Ảnh đại diện",
+            style="max-width: 200px; object-fit: cover;"
+          )
+        .col-md-8
+          h4.text-primary #{user.fullName}
+          p
+            strong Email:
+            | !{user.email}
+          
+          p
+            strong Địa chỉ:
+            | #{user.address || 'Chưa cập nhật'}
+          
+          p
+            strong Trạng thái:
+            if user.status == 'active'
+              span.badge.badge-success.ml-1 Hoạt động
+            else
+              span.badge.badge-danger.ml-1 Bị khóa
+
+  .mt-4
+    a.btn.btn-warning.ml-2(href=`${prefixAdmin}/my-account/edit/${user._id}`) Sửa tài khoản
+    a.btn.btn-danger.ml-2(href=`${prefixAdmin}/my-account/change-password`) Đổi mật khẩu
+
+  script(src="/admin/js/product.js")

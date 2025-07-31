@@ -53,7 +53,7 @@ block main
               td
                 = item.address || "—"
               td
-                = item.role.title || "—"
+                = item.role && item.role.title || "—"
               td.text-center
                 if role && role.permissions && role.permissions.includes('account-edit')
                   if item.status == "active"

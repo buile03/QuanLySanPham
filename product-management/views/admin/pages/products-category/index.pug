@@ -37,6 +37,8 @@ block main
             th(style="min-width: 150px") Tên danh mục
             th(style="min-width: 200px") Mô tả
             th Vị trí 
+            th Người tạo
+            th Người sửa
             th Trạng thái
             th(style="width: 200px") Thao tác
         tbody
@@ -69,6 +71,17 @@ block main
                   min="1",
                   name="position"
                 )
+              td 
+                | #{item.accountFullName}
+                br
+                if item.createdBy && item.createdBy.account_id && item.createdBy.createAt
+                  | #{dayjs(item.createdBy.createAt).format('DD/MM/YYYY HH:mm')}
+              td 
+                | #{item.accountFullName}
+                br
+                if item.updatedBy && item.updatedBy.account_id && item.updatedBy.updateAt
+                  | #{dayjs(item.updatedBy.updateAt).format('DD/MM/YYYY HH:mm')}
+                
               td.text-center
                 if role && role.permissions && role.permissions.includes('products-category-edit')
                   if item.status == "active"

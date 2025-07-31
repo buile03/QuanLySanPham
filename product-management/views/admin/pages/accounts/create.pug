@@ -34,7 +34,7 @@ block main
           each role in roles
             option(value=role._id)= role.title
       .form-group
-        label(for="thumbnail") Ảnh đại diện
+        label(for="avatar") Ảnh đại diện
         input.form-control-file(type="file", name="avatar", id="thumbnail", accept="image/*")
         br
         img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")

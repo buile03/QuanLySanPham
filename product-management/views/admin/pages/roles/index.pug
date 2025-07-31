@@ -24,32 +24,28 @@ block main
           th(style="width: 200px") Thao tác
       tbody
         if roles && roles.length > 0
-          each role, index in roles
+          each item, index in roles
             tr
               td.text-center #{index + 1}
-              td #{role.title}
+              td #{item.title}
               td 
-                if role.description
-                  != role.description
+                if item.description
+                  != item.description
                 else
                   span.text-muted Không có mô tả
-            
-              td.text-center #{role.createdAt ? role.createdAt.toLocaleDateString('vi-VN') : ''}
+              td.text-center #{item.createdAt ? item.createdAt.toLocaleDateString('vi-VN') : ''}
               td.text-center
                 if role && role.permissions && role.permissions.includes('roles-edit')
-                  a(
-                    href=`${prefixAdmin}/roles/edit/${role._id}`
-                    class="btn btn-warning btn-sm ml-1") Sửa
+                  a(href=`${prefixAdmin}/roles/edit/${item._id}`, class="btn btn-warning btn-sm ml-1") Sửa
                 if role && role.permissions && role.permissions.includes('roles-view')
-                  a(
-                    href=`${prefixAdmin}/roles/detail/${role._id}`
-                    class="btn btn-primary btn-sm ml-1") Chi tiết
+                  a(href=`${prefixAdmin}/roles/detail/${item._id}`, class="btn btn-primary btn-sm ml-1") Chi tiết
                 if role && role.permissions && role.permissions.includes('roles-delete')
                   button(
                     class="btn btn-danger btn-sm ml-1"
                     button-delete
-                    data-id=role._id
+                    data-id=item._id
                   ) Xóa
+
         else
           tr
             td.text-center(colspan="6") Không có dữ liệu

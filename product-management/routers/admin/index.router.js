@@ -9,6 +9,7 @@ const productCategoryRouter = require("./product-category.router");
 const roleRouter = require("./role.router");
 const accountRouter = require("./account.router");
 const authRouter = require("./auth.router");
+const myAccountRouter = require("./my-account.router");
 
 router.use("/dashboard", authMiddleware.requireAuth, dashboardRouter);
 router.use("/products", authMiddleware.requireAuth, productRouter);
@@ -20,4 +21,5 @@ router.use(
 router.use("/roles", authMiddleware.requireAuth, roleRouter);
 router.use("/accounts", authMiddleware.requireAuth, accountRouter);
 router.use("/auth", authRouter);
+router.use("/my-account", authMiddleware.requireAuth, myAccountRouter);
 module.exports = router;

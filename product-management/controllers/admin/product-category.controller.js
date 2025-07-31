@@ -1,9 +1,9 @@
-const ProductCategory = require("../../models/product-category.model");
 const filterStatusHelper = require("../../helpers/filterStatus");
+const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const systemConfig = require("../../config/system");
-const { proppatch } = require("../../routers/admin/dashboard.router");
 
 const { createTreeWithIndent } = require("../../helpers/categoryTreeHelper");
 
@@ -14,10 +14,12 @@ module.exports.index = async (req, res) => {
     const searchCondition = searchHelper(req.query);
 
     let filter = { deleted: false };
+
     // Lọc trạng thái
     if (req.query.status) {
       filter.status = req.query.status;
     }
+
     // Tìm kiếm
     if (searchCondition.regex) {
       filter.title = searchCondition.regex;
@@ -25,17 +27,41 @@ module.exports.index = async (req, res) => {
 
     const totalItems = await ProductCategory.countDocuments(filter);
     const pagination = paginationHelper(req.query.page, totalItems, 10);
-    //sort
-    let sort = {};
 
+    // Sắp xếp
+    let sort = {};
     if (req.query.sortKey && req.query.sortValue) {
       sort[req.query.sortKey] = req.query.sortValue;
     } else {
       sort.position = "desc";
     }
-    //end sort
+
+    // Lấy danh sách
     const flatRecords = await ProductCategory.find(filter).sort(sort);
+
+    // Tạo cây phân cấp
     const record = createTreeWithIndent(flatRecords);
+
+    // Gán tên người tạo và cập nhật cho từng phần tử
+    for (const item of record) {
+      // Người tạo
+      if (item.createdBy?.account_id) {
+        const creator = await Account.findById(item.createdBy.account_id);
+        item.accountFullName =
+          creator?.fullName || creator?.username || "Không rõ";
+      } else {
+        item.accountFullName = "Không rõ";
+      }
+
+      // Người cập nhật
+      if (item.updatedBy?.account_id) {
+        const updater = await Account.findById(item.updatedBy.account_id);
+        item.updatedFullName =
+          updater?.fullName || updater?.username || "Không rõ";
+      } else {
+        item.updatedFullName = "Không rõ";
+      }
+    }
 
     res.render("admin/pages/products-category/index", {
       pageTitle: "Danh sách sản phẩm",
@@ -142,7 +168,9 @@ module.exports.createPost = async (req, res) => {
     }
 
     const thumbnailPath = req.file ? `uploads/${req.file.filename}` : "";
-
+    req.body.createdBy = {
+      account_id: res.locals.user._id,
+    };
     const record = new ProductCategory({
       title,
       parent_id: parent_id || "",
@@ -152,6 +180,7 @@ module.exports.createPost = async (req, res) => {
       position,
       deleted: false,
       deletedAt: null,
+      createdBy: req.body.createdBy,
     });
 
     await record.save();
@@ -210,7 +239,10 @@ module.exports.editPatch = async (req, res) => {
         `${systemConfig.prefixAdmin}/products-category/edit/${id}`
       );
     }
-
+    const updatedBy = {
+      account_id: res.locals.user._id,
+      updateAt: new Date(),
+    };
     // Chuẩn bị dữ liệu cập nhật
     const updateData = {
       title,
@@ -219,6 +251,7 @@ module.exports.editPatch = async (req, res) => {
       status,
       position: parseInt(position) || 1,
       updatedAt: new Date(),
+      updatedBy: updatedBy,
     };
 
     // Xử lý upload ảnh mới nếu có

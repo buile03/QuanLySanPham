@@ -43,7 +43,6 @@ module.exports.create = async (req, res) => {
 // [POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
   try {
-    // Kiểm tra email đã tồn tại chưa
     const existingAccount = await Account.findOne({
       email: req.body.email,
       deleted: false,
@@ -54,11 +53,21 @@ module.exports.createPost = async (req, res) => {
       return res.redirect(`${systemConfig.prefixAdmin}/accounts/create`);
     }
 
-    // Mã hóa mật khẩu
-    req.body.password = md5(req.body.password);
+    const newAccount = {
+      fullName: req.body.fullName,
+      email: req.body.email,
+      password: md5(req.body.password),
+      phone: req.body.phone,
+      address: req.body.address,
+      role_id: req.body.role_id,
+      status: req.body.status,
+    };
 
-    // Tạo tài khoản mới
-    const record = new Account(req.body);
+    if (req.file) {
+      newAccount.avatar = `uploads/${req.file.filename}`;
+    }
+
+    const record = new Account(newAccount);
     await record.save();
 
     req.flash("success", "Thêm mới tài khoản thành công");
@@ -95,8 +104,7 @@ module.exports.edit = async (req, res) => {
     res.status(500).send("Lỗi server");
   }
 };
-
-// [POST] /admin/roles/edit/:id
+// [POST] /admin/accounts/edit/:id
 module.exports.editPost = async (req, res) => {
   try {
     const id = req.params.id;
@@ -111,18 +119,32 @@ module.exports.editPost = async (req, res) => {
       return res.redirect(`${systemConfig.prefixAdmin}/accounts/edit/${id}`);
     }
 
+    const updateData = {
+      fullName: req.body.fullName,
+      email: req.body.email,
+      phone: req.body.phone,
+      address: req.body.address,
+      role_id: req.body.role_id,
+      status: req.body.status,
+      updatedAt: new Date(),
+    };
+
     if (req.body.password) {
-      req.body.password = md5(req.body.password);
-    } else {
-      delete req.body.password;
+      updateData.password = md5(req.body.password);
     }
 
-    await Account.updateOne({ _id: id }, req.body);
+    if (req.file) {
+      updateData.avatar = `uploads/${req.file.filename}`;
+    } else if (req.body.currentThumbnail) {
+      updateData.avatar = req.body.currentThumbnail;
+    }
+
+    await Account.updateOne({ _id: id }, updateData);
 
     req.flash("success", "Cập nhật tài khoản thành công");
     res.redirect(`${systemConfig.prefixAdmin}/accounts`);
   } catch (err) {
-    console.error("Role Edit Post Error:", err);
+    console.error("Account Edit Post Error:", err);
     req.flash("error", "Có lỗi xảy ra khi cập nhật tài khoản");
     res.redirect(`${systemConfig.prefixAdmin}/accounts/edit/${req.params.id}`);
   }

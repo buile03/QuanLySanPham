@@ -1,0 +1,39 @@
+extends ../../layouts/default
+include ../../mixins/alert
+include ../../mixins/noAccess
+
+block main
+  h1.mb-4.text-primary Chỉnh sửa tài khoản
+
+  +alert-error(3000)
+  +alert-success(3000)
+
+  form(method="POST", action=`${prefixAdmin}/my-account/edit/${user._id}`, enctype="multipart/form-data")
+    .form-group
+      label(for="fullName") Họ và tên
+      input.form-control(type="text", name="fullName", id="fullName", value=user.fullName, required)
+
+    .form-group
+      label(for="email") Email
+      input.form-control(type="email", name="email", id="email", value=user.email, required)
+
+    .form-group
+      label(for="phone") Số điện thoại
+      input.form-control(type="text", name="phone", id="phone", value=user.phone, required)
+
+    .form-group
+      label(for="avatar") Ảnh đại diện
+      input.form-control-file(type="file", name="avatar", id="thumbnail", accept="image/*")
+      br
+      if user.avatar
+        img#preview-img(src=`/${user.avatar}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
+        br
+        button#remove-btn(type="button", class="btn btn-sm btn-danger mt-2") Xóa ảnh
+        input(type="hidden", name="currentThumbnail", value=user.avatar)
+      else
+        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+        br
+        button#remove-btn(type="button", style="display: none;" class="btn btn-sm btn-danger") Xóa ảnh
+
+    button.btn.btn-primary(type="submit") Cập nhật
+    a.btn.btn-secondary.ml-2(href=`${prefixAdmin}/my-account`) Quay lại

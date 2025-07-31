@@ -9,7 +9,7 @@ block main
     +alert-error(3000)
     +alert-success(3000)
 
-    form(method="POST", action=`${prefixAdmin}/accounts/edit/${record._id}?_method=POST`)
+    form(method="POST", action=`${prefixAdmin}/accounts/edit/${record._id}?_method=POST`, enctype="multipart/form-data")
       .form-group
         label(for="fullName") Họ và tên
         input.form-control(type="text", name="fullName", id="fullName", value=record.fullName, required)
@@ -37,18 +37,18 @@ block main
             option(value=role._id, selected=record.role_id == role._id) #{role.title}
       
       .form-group
-        label(for="thumbnail") Ảnh đại diện
-        input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
+        label(for="avatar") Ảnh đại diện
+        input.form-control-file(type="file", name="avatar", id="thumbnail", accept="image/*")
         br
-        if record.thumbnail
-          img#preview-img(src=`/${record.thumbnail}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
+        if record.avatar
+          img#preview-img(src=`/${record.avatar}`, alt="Preview", style="max-width: 200px; margin-top: 10px;")
           br
           button#remove-btn(type="button", class="btn btn-sm btn-danger mt-2") Xóa ảnh
-          input(type="hidden", name="currentThumbnail", value=record.thumbnail)
+          input(type="hidden", name="currentThumbnail", value=record.avatar)
         else
           img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
           br
-          button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+          button#remove-btn(type="button", style="display: none;" class="btn btn-sm btn-danger") Xóa ảnh
       .form-group
         label(for="status") Trạng thái
         select.form-control(name="status", id="status")

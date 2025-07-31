@@ -13,6 +13,12 @@ aside.sidebar.bg-light.border-right.p-3(style="width: 220px; min-height: 100vh")
         li.nav-item
           a.nav-link(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
 
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/posts`) Danh sách bài viết
+
+        li.nav-item
+          a.nav-link(href=`${prefixAdmin}/post-category`) Danh mục bài viết
+
       if role && role.permissions && role.permissions.includes('roles-view')
         li.nav-item
           a.nav-link(href=`${prefixAdmin}/roles`) Danh sách quyền
