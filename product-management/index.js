@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const dayjs = require("dayjs");
 
 // Kết nối cơ sở dữ liệu MongoDB
 const database = require("./config/database");
@@ -60,7 +61,7 @@ app.use(
 // Cấu hình router cho client và admin
 app.use("/", routerClient);
 app.use(systemConfig.prefixAdmin, routerAdmin); // Sử dụng prefixAdmin từ config
-
+app.locals.dayjs = dayjs;
 // Khởi động server
 if (require.main === module) {
   app.listen(port, () => {

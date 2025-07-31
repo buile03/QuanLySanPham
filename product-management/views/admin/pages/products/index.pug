@@ -40,6 +40,8 @@ block main
             th Vị trí 
             th Giảm (%)
             th Tồn kho
+            th Người tạo
+            th Người sửa
             th Trạng thái
             th(style="width: 200px") Thao tác
         tbody
@@ -76,6 +78,17 @@ block main
                   span #{product.position}
               td.text-center #{product.discountPercentage}%
               td.text-center #{product.stock}
+              td 
+                | #{product.accountFullName}
+                br
+                if product.createdBy && product.createdBy.account_id && product.createdBy.createAt
+                  | #{dayjs(product.createdBy.createAt).format('DD/MM/YYYY HH:mm')}
+              td 
+                | #{product.accountFullName}
+                br
+                if product.updatedBy && product.updatedBy.account_id && product.updatedBy.updateAt
+                  | #{dayjs(product.updatedBy.updateAt).format('DD/MM/YYYY HH:mm')}
+              
               td.text-center
                 if role && role.permissions.includes('products-edit')
                   if product.status == "active"

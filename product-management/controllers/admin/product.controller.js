@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model");
+const Account = require("../../models/account.model");
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
@@ -38,6 +39,23 @@ module.exports.index = async (req, res) => {
       .sort(sort)
       .skip(pagination.skip)
       .limit(pagination.limit);
+
+    for (const product of products) {
+      // Thêm thông tin người tạo
+      if (product.createdBy?.account_id) {
+        const creator = await Account.findById(product.createdBy.account_id);
+        product.accountFullName = creator?.fullName || creator?.username;
+      } else {
+        product.accountFullName = null;
+      }
+      // Thêm thông tin người cập nhật
+      if (product.updatedBy?.account_id) {
+        const updater = await Account.findById(product.updatedBy.account_id);
+        product.updatedFullName = updater?.fullName || updater?.username;
+      } else {
+        product.updatedFullName = null;
+      }
+    }
 
     res.render("admin/pages/products/index", {
       pageTitle: "Danh sách sản phẩm",
@@ -126,7 +144,10 @@ module.exports.deleteItem = async (req, res) => {
       { _id: id },
       {
         deleted: true,
-        updatedAt: new Date(),
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: new Date(),
+        },
       }
     );
 
@@ -160,6 +181,7 @@ module.exports.createPost = async (req, res) => {
       title,
       description,
       price,
+      createdBy,
       discountPercentage,
       stock,
       thumbnail,
@@ -178,12 +200,17 @@ module.exports.createPost = async (req, res) => {
       req.body.position = parseInt(req.body.position);
     }
 
+    req.body.createdBy = {
+      account_id: res.locals.user._id,
+    };
+
     const thumbnailPath = req.file ? `uploads/${req.file.filename}` : "";
 
     const newProduct = new Product({
       title,
       product_category_id: req.body.product_category_id || null,
       description,
+      createdBy: req.body.createdBy,
       price: parseInt(price),
       discountPercentage: parseFloat(discountPercentage) || 0,
       stock: parseInt(stock),
@@ -244,7 +271,10 @@ module.exports.editPatch = async (req, res) => {
       req.flash("error", "Thiếu tên sản phẩm");
       return res.redirect(`${systemConfig.prefixAdmin}/products/edit/${id}`);
     }
-
+    const updatedBy = {
+      account_id: res.locals.user._id,
+      updateAt: new Date(),
+    };
     // Chuẩn bị dữ liệu cập nhật
     const updateData = {
       title,
@@ -255,7 +285,7 @@ module.exports.editPatch = async (req, res) => {
       stock: parseInt(stock) || 0,
       status,
       position: parseInt(position) || 1,
-      updatedAt: new Date(),
+      updatedBy: updatedBy,
     };
 
     // Xử lý upload ảnh mới nếu có
