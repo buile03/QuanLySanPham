@@ -4,56 +4,65 @@ include ../../mixins/noAccess
 
 block main
   if role && role.permissions && role.permissions.includes('products-category-view')
-    h1.mb-4.text-primary Chi tiết danh mục sản phẩm
-
-    +alert-success("5000")
-
-    .card
-      .card-header.bg-info.text-white
-        h5.mb-0 Thông tin chi tiết danh mục sản phẩm
-      .card-body
-        .row.mb-3
-          .col-md-4.text-center
-            img.img-fluid.img-thumbnail(
-              src=`/${record.thumbnail}`,
-              alt="Thumbnail sản phẩm",
-              style="max-width: 200px; object-fit: cover;"
-            )
-          .col-md-8
-            h4.text-primary #{record.title}
-            p
-              strong Mô tả:
-              | !{record.description}
-            
-            p
-              strong Vị trí hiển thị:
-              | #{record.position}
-            
-            p
-              strong Trạng thái:
-              if record.status == 'active'
-                span.badge.badge-success.ml-1 Hiển thị
-              else
-                span.badge.badge-danger.ml-1 Ẩn
-
-    .mt-4
-      a.btn.btn-secondary(href=`${prefixAdmin}/products-category`) Quay lại danh sách
-      a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products-category/edit/${record._id}`) Sửa sản phẩm
-      button.btn.btn-danger.ml-2(
-        type="button",
-        button-delete,
-        data-id=record._id
-      ) Xóa sản phẩm
-
-    //- Form delete
-    form(
-      action="",
-      method="POST",
-      id="form-delete-item",
-      data-path=`${prefixAdmin}/products-category/delete`
-    )
-      input(type="hidden", name="_method", value="DELETE")
-
-    script(src="/admin/js/product.js")
+    .container-fluid
+      .col-lg-8.mx-auto
+        .card.shadow-sm.border-0
+          .card-header.bg-info.text-white
+            h4.mb-0 Thông tin chi tiết danh mục sản phẩm
+          .card-body
+            +alert-success("5000")
+            .row.mb-3
+              .col-md-4.text-center
+                if record.thumbnail
+                  img.img-fluid.img-thumbnail.rounded.border.border-2(
+                    src=`/${record.thumbnail}`,
+                    alt="Thumbnail sản phẩm",
+                    style="max-width: 200px; object-fit: cover;"
+                  )
+                else
+                  i.fas.fa-folder.fa-7x.text-muted
+              .col-md-8
+                h4.text-primary.mb-2 #{record.title}
+                p.mb-1
+                  strong Mô tả:
+                  | !{record.description}
+                p.mb-1
+                  strong Vị trí hiển thị:
+                  | #{record.position}
+                p.mb-1
+                  strong Trạng thái:
+                  if record.status == 'active'
+                    span.badge.badge-success.ml-1
+                      i.fas.fa-check-circle.mr-1
+                      | Hiển thị
+                  else
+                    span.badge.badge-danger.ml-1
+                      i.fas.fa-ban.mr-1
+                      | Ẩn
+            .mt-4.d-flex.justify-content-end
+              a.btn.btn-secondary(href=`${prefixAdmin}/products-category`)
+                i.fas.fa-arrow-left.mr-1
+                | Quay lại danh sách
+              if role && role.permissions && role.permissions.includes('products-category-edit')
+                a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products-category/edit/${record._id}`)
+                  i.fas.fa-edit.mr-1
+                  | Sửa danh mục
+              if role && role.permissions && role.permissions.includes('products-category-delete')
+                button.btn.btn-danger.ml-2(
+                  type="button",
+                  button-delete,
+                  data-id=record._id
+                )
+                  i.fas.fa-trash.mr-1
+                  | Xóa danh mục
+      //- Form delete
+      form(
+        action="",
+        method="POST",
+        id="form-delete-item",
+        data-path=`${prefixAdmin}/products-category/delete`
+      )
+        input(type="hidden", name="_method", value="DELETE")
+      script(src="/admin/js/product.js")
   else
     +noAccess()

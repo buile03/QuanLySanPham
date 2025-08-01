@@ -4,63 +4,74 @@ include ../../mixins/noAccess
 
 block main
   if role && role.permissions && role.permissions.includes('products-view')
-    h1.mb-4.text-primary Chi tiết sản phẩm
-
-    +alert-success("5000")
-
-    .card
-      .card-header.bg-info.text-white
-        h5.mb-0 Thông tin chi tiết sản phẩm
-      .card-body
-        .row.mb-3
-          .col-md-4.text-center
-            img.img-fluid.img-thumbnail(
-              src=`/${product.thumbnail}`,
-              alt="Thumbnail sản phẩm",
-              style="max-width: 200px; object-fit: cover;"
-            )
-          .col-md-8
-            h4.text-primary #{product.title}
-            p
-              strong Mô tả:
-              | !{product.description}
-            p
-              strong Giá:
-              | #{product.price.toLocaleString()}đ
-            p
-              strong Giảm giá:
-              | #{product.discountPercentage}%
-            p
-              strong Vị trí hiển thị:
-              | #{product.position}
-            p
-              strong Tồn kho:
-              | #{product.stock}
-            p
-              strong Trạng thái:
-              if product.status == 'active'
-                span.badge.badge-success.ml-1 Hiển thị
-              else
-                span.badge.badge-danger.ml-1 Ẩn
-
-    .mt-4
-      a.btn.btn-secondary(href=`${prefixAdmin}/products`) Quay lại danh sách
-      a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products/edit/${product._id}`) Sửa sản phẩm
-      button.btn.btn-danger.ml-2(
-        type="button",
-        button-delete,
-        data-id=product._id
-      ) Xóa sản phẩm
-
-    //- Form delete
-    form(
-      action="",
-      method="POST",
-      id="form-delete-item",
-      data-path=`${prefixAdmin}/products/delete`
-    )
-      input(type="hidden", name="_method", value="DELETE")
-
-    script(src="/admin/js/product.js")
+    .container-fluid
+      .col-lg-8.mx-auto
+        .card.shadow-sm.border-0
+          .card-header.bg-info.text-white
+            h4.mb-0 Thông tin chi tiết sản phẩm
+          .card-body
+            +alert-success("5000")
+            .row.mb-3
+              .col-md-4.text-center
+                if product.thumbnail
+                  img.img-fluid.img-thumbnail.rounded.border.border-2(
+                    src=`/${product.thumbnail}`,
+                    alt="Thumbnail sản phẩm",
+                    style="max-width: 200px; object-fit: cover;"
+                  )
+                else
+                  i.fas.fa-image.fa-7x.text-muted
+              .col-md-8
+                h4.text-primary.mb-2 #{product.title}
+                p.mb-1
+                  strong Mô tả:
+                  | !{product.description}
+                p.mb-1
+                  strong Giá:
+                  | #{product.price.toLocaleString()}đ
+                p.mb-1
+                  strong Giảm giá:
+                  | #{product.discountPercentage}%
+                p.mb-1
+                  strong Vị trí hiển thị:
+                  | #{product.position}
+                p.mb-1
+                  strong Tồn kho:
+                  | #{product.stock}
+                p.mb-1
+                  strong Trạng thái:
+                  if product.status == 'active'
+                    span.badge.badge-success.ml-1
+                      i.fas.fa-check-circle.mr-1
+                      | Hiển thị
+                  else
+                    span.badge.badge-danger.ml-1
+                      i.fas.fa-ban.mr-1
+                      | Ẩn
+            .mt-4.d-flex.justify-content-end
+              a.btn.btn-secondary(href=`${prefixAdmin}/products`)
+                i.fas.fa-arrow-left.mr-1
+                | Quay lại danh sách
+              if role && role.permissions && role.permissions.includes('products-edit')
+                a.btn.btn-warning.ml-2(href=`${prefixAdmin}/products/edit/${product._id}`)
+                  i.fas.fa-edit.mr-1
+                  | Sửa sản phẩm
+              if role && role.permissions && role.permissions.includes('products-delete')
+                button.btn.btn-danger.ml-2(
+                  type="button",
+                  button-delete,
+                  data-id=product._id
+                )
+                  i.fas.fa-trash.mr-1
+                  | Xóa sản phẩm
+      //- Form delete
+      form(
+        action="",
+        method="POST",
+        id="form-delete-item",
+        data-path=`${prefixAdmin}/products/delete`
+      )
+        input(type="hidden", name="_method", value="DELETE")
+      script(src="/admin/js/product.js")
   else
     +noAccess()

@@ -18,17 +18,29 @@ body {
 
 .sidebar {
   width: 220px;
-  background-color: #f1f1f1;
-  border-right: 1px solid #dee2e6;
+  background-color: #2563eb !important; /* Xanh dương hiện đại */
+  border-right: none;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  min-height: 100vh;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
 }
 
 .sidebar .nav-link {
-  color: #333;
+  color: #fff !important;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: background 0.2s, color 0.2s;
 }
 
+.sidebar .nav-link.active,
 .sidebar .nav-link:hover {
-  background-color: #e9ecef;
-  color: #000;
+  background-color: #3b82f6 !important;
+  color: #fff !important;
+}
+
+.sidebar .nav-link i {
+  font-size: 1.1em;
 }
 
 .sidebar .nav-link.text-danger:hover {

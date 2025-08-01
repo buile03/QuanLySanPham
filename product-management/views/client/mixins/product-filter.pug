@@ -1,0 +1,42 @@
+//- client/mixins/product-filter.pug
+mixin product-search(keyword)
+  form(action="/product" method="GET")
+    .input-group.mb-3
+      input.form-control(
+        type="text"
+        name="keyword"
+        placeholder="Tìm kiếm sản phẩm..."
+        value=keyword || ""
+      )
+      button.btn.btn-primary(type="submit") 
+        i.fas.fa-search
+
+mixin product-sort(sortKey, sortValue)
+  .sort-options.mb-3
+    select.form-select(name="sort" onchange="this.form.submit()")
+      option(value="") Sắp xếp theo
+      option(value="position-desc" selected=(sortKey=='position' && sortValue=='desc')) Mặc định
+      option(value="price-asc" selected=(sortKey=='price' && sortValue=='asc')) Giá tăng dần
+      option(value="price-desc" selected=(sortKey=='price' && sortValue=='desc')) Giá giảm dần
+      option(value="title-asc" selected=(sortKey=='title' && sortValue=='asc')) Tên A-Z
+      option(value="title-desc" selected=(sortKey=='title' && sortValue=='desc')) Tên Z-A
+
+mixin product-price-filter(priceMin, priceMax)
+  .price-filter.mb-3
+    h6.filter-title Lọc theo giá
+    .row
+      .col-6
+        input.form-control(
+          type="number"
+          name="price_min"
+          placeholder="Từ"
+          value=priceMin || ""
+        )
+      .col-6
+        input.form-control(
+          type="number"
+          name="price_max"
+          placeholder="Đến"
+          value=priceMax || ""
+        )
+    button.btn.btn-sm.btn-primary.mt-2(type="submit") Áp dụng

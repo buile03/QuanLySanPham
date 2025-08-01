@@ -1,4 +1,30 @@
 extends ../../layouts/default
 
 block main
-  h1 Trang tổng quan
+  .container-fluid
+    h2.mb-4.text-primary Trang tổng quan
+    .row
+      .col-md-3.mb-4
+        .card.shadow-sm.border-0
+          .card-body.text-center
+            i.fas.fa-box fa-2x.text-primary.mb-2
+            h5.mb-0 Sản phẩm
+            p.text-muted.mb-0 Tổng số sản phẩm
+      .col-md-3.mb-4
+        .card.shadow-sm.border-0
+          .card-body.text-center
+            i.fas.fa-th-list fa-2x.text-success.mb-2
+            h5.mb-0 Danh mục
+            p.text-muted.mb-0 Tổng số danh mục
+      .col-md-3.mb-4
+        .card.shadow-sm.border-0
+          .card-body.text-center
+            i.fas.fa-users fa-2x.text-info.mb-2
+            h5.mb-0 Tài khoản
+            p.text-muted.mb-0 Tổng số tài khoản
+      .col-md-3.mb-4
+        .card.shadow-sm.border-0
+          .card-body.text-center
+            i.fas.fa-user-shield fa-2x.text-warning.mb-2
+            h5.mb-0 Quyền
+            p.text-muted.mb-0 Tổng số quyền

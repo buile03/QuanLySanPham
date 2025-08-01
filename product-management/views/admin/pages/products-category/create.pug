@@ -5,43 +5,48 @@ include ../../mixins/select-tree
 
 block main
   if role && role.permissions && role.permissions.includes('products-category-create')
-    h1.mb-4.text-primary Thêm danh mục sản phẩm mới
-    +alert-error(3000)
-    form(method="POST", action=`${prefixAdmin}/products-category/create` enctype="multipart/form-data")
-      .form-group
-        label(for="title") Tên danh mục
-        input.form-control(type="text", name="title", id="title")
-      .form-group
-        label(for="parent_id") Danh mục cha
-        select.form-control(name="parent_id", id="parent_id")
-          option(value="") --- Chọn danh mục cha ---
-          if records
-            +select-tree(records)
-      .form-group
-        label(for="desc") Mô tả
-        textarea.form-control(name="description", id="description")
-        //- textarea.form-control.tinymce(name="description", id="description")  // thêm class để chỉ định textarea nào sử dụng tinymce
-      .form-group
-        label(for="position") Vị trí
-        input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng")
-
-      .form-group
-        label(for="thumbnail") Ảnh đại diện
-        input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
-        br
-        img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
-        br
-        button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
-
-      .form-group
-        label(for="status") Trạng thái
-        select.form-control(name="status", id="status")
-          option(value="active") Hiển thị
-          option(value="inactive") Ẩn
-
-      button.btn.btn-primary(type="submit") Lưu
-      a.btn.btn-secondary(href=`${prefixAdmin}/products-category`) Quay lại
-
-    script(src="/admin/js/product.js")
+    .container-fluid
+      .col-lg-8.mx-auto
+        .card.shadow-sm.border-0
+          .card-header.bg-primary.text-white
+            h4.mb-0 Thêm danh mục sản phẩm mới
+          .card-body
+            +alert-error(3000)
+            form(method="POST", action=`${prefixAdmin}/products-category/create` enctype="multipart/form-data")
+              .form-group.mb-3
+                label(for="title") Tên danh mục
+                input.form-control(type="text", name="title", id="title")
+              .form-group.mb-3
+                label(for="parent_id") Danh mục cha
+                select.form-control(name="parent_id", id="parent_id")
+                  option(value="") --- Chọn danh mục cha ---
+                  if records
+                    +select-tree(records)
+              .form-group.mb-3
+                label(for="desc") Mô tả
+                textarea.form-control(name="description", id="description", rows="4")
+              .form-group.mb-3
+                label(for="position") Vị trí
+                input.form-control(type="number", name="position", id="position", min="1", placeholder="Tự động tăng")
+              .form-group.mb-3
+                label(for="thumbnail") Ảnh đại diện
+                input.form-control-file(type="file", name="thumbnail", id="thumbnail", accept="image/*")
+                br
+                img#preview-img(src="", alt="Preview", style="max-width: 200px; margin-top: 10px; display: none;")
+                br
+                button#remove-btn(type="button", style="display: none; margin-top: 5px;" class="btn btn-sm btn-danger") Xóa ảnh
+              .form-group.mb-3
+                label(for="status") Trạng thái
+                select.form-control(name="status", id="status")
+                  option(value="active") Hiển thị
+                  option(value="inactive") Ẩn
+              .d-flex.justify-content-end.mt-4
+                button.btn.btn-primary(type="submit")
+                  i.fas.fa-save.mr-1
+                  | Lưu
+                a.btn.btn-secondary.ml-2(href=`${prefixAdmin}/products-category`)
+                  i.fas.fa-arrow-left.mr-1
+                  | Quay lại
+      script(src="/admin/js/product.js")
   else
     +noAccess()

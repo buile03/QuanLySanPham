@@ -1,40 +1,71 @@
-extends ../../layouts/default
+extends ../../layouts/default.pug
 
 block main
-  .container
-    h1.mb-4.text-primary #{product.title}
-
+  .container.my-4
     .row
-      .col-md-5
-        img.img-fluid.img-thumbnail(
-          src=`/${product.thumbnail}`,
+      // Product Image
+      .col-md-5.mb-4
+        img.img-fluid.rounded(
+          src=`/${product.thumbnail}`, 
           alt=product.title,
-          style="object-fit: cover; width: 100%; max-height: 400px;"
+          style="max-height: 400px; width: 100%; object-fit: contain;"
         )
 
+      // Product Info
       .col-md-7
-        if product.discountPercentage > 0
-          h4.text-danger Giá khuyến mãi: #{product.newPrice.toLocaleString()} VNĐ
-          p
-            | Giá gốc:
-            del.text-muted.ml-2 #{product.price.toLocaleString()} VNĐ
-          p.text-success
-            | Giảm:
-            strong.ml-1 #{product.discountPercentage}%
-        else
-          h4.text-primary Giá: #{product.price.toLocaleString()} VNĐ
+        h1.mb-3 #{product.title}
 
-        p.mt-3
-          strong Mô tả:
-          | !{product.description}
+        // Price Section
+        .price-section.mb-4
+          if product.discountPercentage > 0
+            h2.text-danger #{product.newPrice.toLocaleString()} VNĐ
+            .d-flex.align-items-center
+              del.text-muted #{product.price.toLocaleString()} VNĐ
+              span.badge.bg-danger.ms-2 -#{product.discountPercentage}%
+          else
+            h2.text-primary #{product.price.toLocaleString()} VNĐ
 
-        p
-          strong Tồn kho:
-          | #{product.stock}
+        // Stock Status
+        .stock-status.mb-3
+          if product.stock > 0
+            span.text-success Còn hàng (#{product.stock})
+          else
+            span.text-danger Hết hàng
 
-        p
-          strong Vị trí:
-          | #{product.position}
+        // Position
+        if product.position
+          .position.mb-3
+            span.text-muted Vị trí: #{product.position}
 
+        // Description
+        .description.mb-4.border-top.pt-3
+          h5.fw-bold Mô tả sản phẩm
+          .mt-2 !{product.description}
 
-        a.btn.btn-secondary.mt-3(href="/product") Quay lại danh sách
+        // Action Buttons
+        .action-buttons
+          a.btn.btn-primary.me-2(href="#") Thêm vào giỏ hàng
+          a.btn.btn-outline-secondary(href="/product") Quay lại
+
+    // Related Products (if available)
+    if relatedProducts && relatedProducts.length > 0
+      .related-products.mt-5.pt-4.border-top
+        h4.mb-4 Sản phẩm cùng loại
+        .row
+          each item in relatedProducts
+            .col-md-3.mb-4
+              .card.h-100
+                img.card-img-top(
+                  src=item.thumbnail, 
+                  alt=item.title, 
+                  style="height: 150px; object-fit: cover;"
+                )
+                .card-body
+                  h6.card-title
+                    a(href=`/product/detail/${item.slug}`)= item.title
+                  if item.discountPercentage > 0
+                    .text-danger.fw-bold #{item.newPrice.toLocaleString()} VNĐ
+                  else
+                    .text-primary.fw-bold #{item.price.toLocaleString()} VNĐ
+                .card-footer.bg-transparent
+                  a.btn.btn-sm.btn-outline-primary(href=`/product/detail/${item.slug}`) Xem chi tiết

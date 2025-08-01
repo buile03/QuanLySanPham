@@ -5,106 +5,111 @@ include ../../mixins/form-change-multi
 
 block main
   if role && role.permissions && role.permissions.includes('account-view')
-    h1.mb-4.text-primary Trang danh sách tài khoản
-    +alert-success("5000")
-
-    .row.mb-3.align-items-center
-      .col-md-4.text-right
+    .container-fluid
+      .d-flex.justify-content-between.align-items-center.mb-4
+        h2.mb-0.text-primary Trang danh sách tài khoản
         if role && role.permissions && role.permissions.includes('account-create')
-          a.btn.btn-primary(href=`${prefixAdmin}/accounts/create`) 
+          a.btn.btn-primary(href=`${prefixAdmin}/accounts/create`)
             i.fas.fa-plus.mr-2
             | Thêm mới
-
-    +form-change-multi(`${prefixAdmin}/accounts/change-multi`)
-      table.table.table-hover.table-bordered.table-sm.align-middle
-        thead.thead-dark
-          tr.text-center
-            th(style="width: 50px")
-              input(type="checkbox", name="checkall")
-            th(style="width: 60px") Ảnh
-            th(style="min-width: 150px") Họ tên
-            th Email
-            th Số điện thoại
-            th Địa chỉ
-            th Vai trò
-            th Trạng thái
-            th(style="width: 200px") Thao tác
-        tbody
-          each item, index in records
-            tr
-              td.text-center
-                input(type="checkbox", name="id", value=item._id)
-              td.text-center
-                if item.avatar
-                  img(
-                    src=`/${item.avatar}`,
-                    alt="Avatar",
-                    class="img-thumbnail",
-                    style="width: 50px; height: 50px; object-fit: cover;"
-                  )
-                else
-                  span No image
-              td 
-                = item.fullName
-              td
-                = item.email
-              td
-                = item.phone
-              td
-                = item.address || "—"
-              td
-                = item.role && item.role.title || "—"
-              td.text-center
-                if role && role.permissions && role.permissions.includes('account-edit')
-                  if item.status == "active"
-                    a(
-                      href="javascript:;",
-                      data-status="active",
-                      data-id=item._id,
-                      button-change-status="",
-                      class="badge badge-success"
-                    ) Hoạt động
-                  else
-                    a(
-                      href="javascript:;",
-                      data-status="inactive",
-                      data-id=item._id,
-                      button-change-status="",
-                      class="badge badge-danger"
-                    ) Dừng hoạt động
-              td.text-center
-                if role && role.permissions && role.permissions.includes('account-edit')
-                  a(
-                    href=`${prefixAdmin}/accounts/edit/${item._id}`
-                    class="btn btn-warning btn-sm ml-1") Sửa
-                if role && role.permissions && role.permissions.includes('account-view')
-                  a(
-                    href=`${prefixAdmin}/accounts/detail/${item._id}`
-                    class="btn btn-primary btn-sm ml-1") Chi tiết
-                if role && role.permissions && role.permissions.includes('account-delete')
-                  button(
-                    class="btn btn-danger btn-sm ml-1"
-                    button-delete
-                    data-id=item._id
-                  ) Xóa
-
-    form(
-      action="",
-      method="POST",
-      id="form-change-status",
-      data-path=`${prefixAdmin}/accounts/change-status`
-    )
-      input(type="hidden", name="_method", value="PATCH")
-      input(type="hidden", name="redirect", id="redirect-input")
-
-    form(
-      action="",
-      method="POST",
-      id="form-delete-item",
-      data-path=`${prefixAdmin}/accounts/delete`
-    )
-      input(type="hidden", name="_method", value="DELETE")
-
-    script(src="/admin/js/account.js")
-  else  
+      +alert-success("5000")
+      .card.shadow-sm.border-0.mb-4
+        .card-body
+          +form-change-multi(`${prefixAdmin}/accounts/change-multi`)
+            table.table.table-hover.table-bordered.table-striped.align-middle.mb-0
+              thead.thead-dark
+                tr.text-center
+                  th(style="width: 50px")
+                    input(type="checkbox", name="checkall")
+                  th(style="width: 60px") Ảnh
+                  th(style="min-width: 150px") Họ tên
+                  th Email
+                  th Số điện thoại
+                  th Địa chỉ
+                  th Vai trò
+                  th Trạng thái
+                  th(style="width: 200px") Thao tác
+              tbody
+                each item, index in records
+                  tr
+                    td.text-center
+                      input(type="checkbox", name="id", value=item._id)
+                    td.text-center
+                      if item.avatar
+                        img(
+                          src=`/${item.avatar}`,
+                          alt="Avatar",
+                          class="img-thumbnail rounded-circle border border-2",
+                          style="width: 50px; height: 50px; object-fit: cover;"
+                        )
+                      else
+                        span.text-muted
+                          i.fas.fa-user-circle.fa-2x
+                    td= item.fullName
+                    td= item.email
+                    td= item.phone
+                    td= item.address || "—"
+                    td= item.role && item.role.title || "—"
+                    td.text-center
+                      if role && role.permissions && role.permissions.includes('account-edit')
+                        if item.status == "active"
+                          a(
+                            href="javascript:;",
+                            data-status="active",
+                            data-id=item._id,
+                            button-change-status="",
+                            class="badge badge-success px-3 py-2"
+                          )
+                            i.fas.fa-check-circle.mr-1
+                            | Hoạt động
+                        else
+                          a(
+                            href="javascript:;",
+                            data-status="inactive",
+                            data-id=item._id,
+                            button-change-status="",
+                            class="badge badge-danger px-3 py-2"
+                          )
+                            i.fas.fa-ban.mr-1
+                            | Dừng hoạt động
+                    td.text-center
+                      if role && role.permissions && role.permissions.includes('account-edit')
+                        a(
+                          href=`${prefixAdmin}/accounts/edit/${item._id}`,
+                          class="btn btn-warning btn-sm mx-1"
+                        )
+                          i.fas.fa-edit.mr-1
+                          | Sửa
+                      if role && role.permissions && role.permissions.includes('account-view')
+                        a(
+                          href=`${prefixAdmin}/accounts/detail/${item._id}`,
+                          class="btn btn-primary btn-sm mx-1"
+                        )
+                          i.fas.fa-info-circle.mr-1
+                          | Chi tiết
+                      if role && role.permissions && role.permissions.includes('account-delete')
+                        button(
+                          class="btn btn-danger btn-sm mx-1",
+                          button-delete,
+                          data-id=item._id
+                        )
+                          i.fas.fa-trash.mr-1
+                          | Xóa
+      form(
+        action="",
+        method="POST",
+        id="form-change-status",
+        data-path=`${prefixAdmin}/accounts/change-status`
+      )
+        input(type="hidden", name="_method", value="PATCH")
+        input(type="hidden", name="redirect", id="redirect-input")
+      form(
+        action="",
+        method="POST",
+        id="form-delete-item",
+        data-path=`${prefixAdmin}/accounts/delete`
+      )
+        input(type="hidden", name="_method", value="DELETE")
+      script(src="/admin/js/account.js")
+  else
     +noAccess()

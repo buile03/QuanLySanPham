@@ -1,31 +1,41 @@
 
-aside.sidebar.bg-light.border-right.p-3(style="width: 220px; min-height: 100vh")
+aside.sidebar.bg-primary.text-white.p-0(style="width: 220px; min-height: 100vh;")
   nav
     ul.nav.flex-column
-      li.nav-item
-        a.nav-link(href=`${prefixAdmin}/dashboard`) Trang tổng quan
-
+      li.nav-item.mb-1
+        a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/dashboard`)
+          i.fas.fa-tachometer-alt.mr-2
+          | Trang tổng quan
       if role && role.permissions && role.permissions.includes('products-view')
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/products`) Danh sách sản phẩm
-
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/products`)
+            i.fas.fa-box-open.mr-2
+            | Danh sách sản phẩm
       if role && role.permissions && role.permissions.includes('products-category-view')
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/products-category`) Danh mục sản phẩm
-
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/posts`) Danh sách bài viết
-
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/post-category`) Danh mục bài viết
-
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/products-category`)
+            i.fas.fa-th-list.mr-2
+            | Danh mục sản phẩm
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/posts`)
+            i.fas.fa-newspaper.mr-2
+            | Danh sách bài viết
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/post-category`)
+            i.fas.fa-folder-open.mr-2
+            | Danh mục bài viết
       if role && role.permissions && role.permissions.includes('roles-view')
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/roles`) Danh sách quyền
-
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/roles`)
+            i.fas.fa-user-shield.mr-2
+            | Danh sách quyền
       if role && role.permissions && role.permissions.includes('account-view')
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/accounts`) Danh sách tài khoản
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/accounts`)
+            i.fas.fa-users.mr-2
+            | Danh sách tài khoản
       if role && role.permissions && role.permissions.includes('roles-permissions')
-        li.nav-item
-          a.nav-link(href=`${prefixAdmin}/roles/permissions`) Phân quyền
+        li.nav-item.mb-1
+          a.nav-link.text-white.d-flex.align-items-center(href=`${prefixAdmin}/roles/permissions`)
+            i.fas.fa-key.mr-2
+            | Phân quyền

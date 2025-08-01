@@ -1,14 +1,15 @@
-header.header.bg-dark.text-white.py-3
-  .container.d-flex.justify-content-between.align-items-center
-    h1.h4.mb-0 Quản trị hệ thống
-    
+header.header.bg-white.shadow-sm.py-3
+  .container-fluid.d-flex.justify-content-between.align-items-center
+    .d-flex.align-items-center
+      img(src="/images/logo.png", alt="Logo", style="height:50px;width:auto;", class="mr-3 d-none d-md-block")
+      h1.h5.mb-0.text-primary Quản trị hệ thống
     div
-      a.btn.btn-outline-light.me-2(href=`${prefixAdmin}/my-account`)
+      a.btn.btn-outline-primary.me-2(href=`${prefixAdmin}/my-account`)
         i.fas.fa-user.me-2
         | Thông tin cá nhân
-      a.btn.btn-outline-light.me-2(href=`${prefixAdmin}/my-account/change-password`)
+      a.btn.btn-outline-primary.me-2(href=`${prefixAdmin}/my-account/change-password`)
         i.fas.fa-key.me-2
         | Đổi mật khẩu
-      a.btn.btn-outline-danger(href=`${prefixAdmin}/auth/logout`)
+      a.btn.btn-danger(href=`${prefixAdmin}/auth/logout`)
         i.fas.fa-sign-out-alt.me-2
         | Đăng xuất

@@ -3,7 +3,16 @@ include ../../mixins/box-head.pug
 
 block main
   .product-page
-    +box-head("Danh sách sản phẩm")
+    if category
+      +box-head(`Sản phẩm - ${category.title}`)
+      .category-info.mb-3
+        p.text-muted
+          | Danh mục: 
+          strong #{category.title}
+        if category.description
+          p.text-muted!= category.description
+    else
+      +box-head("Danh sách sản phẩm")
 
     .product-list
       if products.length

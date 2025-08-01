@@ -1,15 +1,30 @@
 header.main-header
   .container
-    .row.align.items-centers 
-        .col-3
-            .inner-logo
-                a(href='/')
-                    img(src="/images/logo.png", alt="Logo", class="logo-img")
-        .col-9 
-            .inner-menu 
-                ul
-                    li 
-                        a(href='/') Home
-                    li 
-                        a(href='/product') Sản phẩm
-                    
+    .row.align-items-center
+      .col-3
+        .inner-logo
+          a(href='/')
+            img(src="/images/logo.png", alt="Logo", class="logo-img")
+      .col-9.d-flex.justify-content-start
+        .inner-menu
+          ul
+            li
+              a(href='/') Trang chủ
+            li.dropdown
+              a(href='/product') Sản phẩm
+              ul.dropdown-menu
+                if categories && categories.length > 0
+                  each category in categories
+                    li.dropdown-submenu
+                      a(href=`/product/category/${category.slug}`)= category.title
+                      if category.children && category.children.length > 0
+                        ul.dropdown-menu
+                          each subCategory in category.children
+                            li
+                              a(href=`/product/category/${subCategory.slug}`)= subCategory.title
+                else
+                  li
+                    a(href='/product') Tất cả sản phẩm
+
+            li
+              a(href='/post') Bài viết
