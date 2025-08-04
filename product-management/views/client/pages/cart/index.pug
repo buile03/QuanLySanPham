@@ -1,0 +1,41 @@
+extends ../../layouts/default
+include ../../mixins/alert
+block main
+  +alert-success()
+  +alert-error()
+  .container.my-4
+    h1.text-center.mb-4 Giỏ hàng
+
+    if products.length === 0
+      .alert.alert-warning Chưa có sản phẩm nào trong giỏ hàng.
+    else
+      table.table.table-bordered
+        thead
+          tr
+            th STT
+            th Ảnh
+            th Tên sản phẩm
+            th Đơn giá
+            th Số lượng
+            th Thành tiền
+            th Hành động
+        tbody
+          each product, index in products
+            tr
+              td #{index + 1}
+              td
+                img(src=`/${product.thumbnail}`, style="width: 60px; height: 60px; object-fit: cover;")
+              td 
+                a(href=`/product/detail/${product.slug}`) #{product.title}
+              td #{product.newPrice.toLocaleString()} đ
+              td #{product.quantity}
+              td #{product.total.toLocaleString()} đ
+              td
+                a(href=`/cart/delete/${product._id}` class="btn btn-danger") Xóa 
+
+      hr
+      h4.text-end Tổng tiền: 
+        span.text-danger.ms-2 #{totalAmount.toLocaleString()} đ
+
+      form(action="/checkout", method="POST")
+        button.btn.btn-success.mt-3(type="submit") Thanh toán

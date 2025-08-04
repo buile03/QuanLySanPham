@@ -1,9 +1,9 @@
 extends ../../layouts/default.pug
-
+include ../../mixins/alert
 block main
+  
   .container.my-4
     .row
-      // Product Image
       .col-md-5.mb-4
         img.img-fluid.rounded(
           src=`/${product.thumbnail}`, 
@@ -11,11 +11,10 @@ block main
           style="max-height: 400px; width: 100%; object-fit: contain;"
         )
 
-      // Product Info
       .col-md-7
         h1.mb-3 #{product.title}
 
-        // Price Section
+        
         .price-section.mb-4
           if product.discountPercentage > 0
             h2.text-danger #{product.newPrice.toLocaleString()} VNĐ
@@ -25,29 +24,29 @@ block main
           else
             h2.text-primary #{product.price.toLocaleString()} VNĐ
 
-        // Stock Status
         .stock-status.mb-3
           if product.stock > 0
             span.text-success Còn hàng (#{product.stock})
           else
             span.text-danger Hết hàng
 
-        // Position
         if product.position
           .position.mb-3
             span.text-muted Vị trí: #{product.position}
 
-        // Description
         .description.mb-4.border-top.pt-3
           h5.fw-bold Mô tả sản phẩm
           .mt-2 !{product.description}
 
-        // Action Buttons
-        .action-buttons
-          a.btn.btn-primary.me-2(href="#") Thêm vào giỏ hàng
+        
+        .action-buttons.d-flex.align-items-center.mt-4
+          form(method="POST", action=`/cart/add/${product._id}`).d-flex.align-items-center
+            input.form-control.me-2(type="number", name="quantity", min="1", value="1", style="width: 100px")
+            button.btn.btn-primary.me-2(type="submit") Thêm vào giỏ hàng
           a.btn.btn-outline-secondary(href="/product") Quay lại
 
-    // Related Products (if available)
+
+  
     if relatedProducts && relatedProducts.length > 0
       .related-products.mt-5.pt-4.border-top
         h4.mb-4 Sản phẩm cùng loại

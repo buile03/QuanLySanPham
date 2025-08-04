@@ -1,5 +1,5 @@
-const ProductCategory = require("../models/product-category.model");
-const { createCategoryTree } = require("../helpers/categoryTreeHelper");
+const ProductCategory = require("../../models/product-category.model");
+const { createCategoryTree } = require("../../helpers/categoryTreeHelper");
 
 module.exports = async (req, res, next) => {
   try {

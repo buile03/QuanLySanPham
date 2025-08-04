@@ -1,11 +1,24 @@
 header.main-header
   .container
     .row.align-items-center
-      .col-3
+      .col-2
         .inner-logo
           a(href='/')
             img(src="/images/logo.png", alt="Logo", class="logo-img")
-      .col-9.d-flex.justify-content-start
+      .col-4 
+        .inner-search.ms-4
+          form(action="/search" method="GET")
+            .input-group
+              input.form-control(
+                type="text" 
+                name="keyword" 
+                placeholder="Tìm kiếm..."
+                aria-label="Tìm kiếm"
+              )
+              button.btn.btn-outline-secondary(type="submit")
+                i.fas.fa-search
+      
+      .col-6.d-flex.justify-content-start
         .inner-menu
           ul
             li
@@ -25,6 +38,7 @@ header.main-header
                 else
                   li
                     a(href='/product') Tất cả sản phẩm
-
+            li
+              a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart.quantityTotal : 0}) 
             li
               a(href='/post') Bài viết

@@ -1,7 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
-
+include ../../mixins/alert.pug
 block main
+  +alert-success()
   .product-page
     if category
       +box-head(`Sản phẩm - ${category.title}`)
