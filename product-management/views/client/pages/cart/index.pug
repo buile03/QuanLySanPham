@@ -28,7 +28,9 @@ block main
               td 
                 a(href=`/product/detail/${product.slug}`) #{product.title}
               td #{product.newPrice.toLocaleString()} đ
-              td #{product.quantity}
+              td
+               input.form-control(type="number", name="quantity", value=product.quantity, item-id = product._id, min="1", style="width: 80px;")
+
               td #{product.total.toLocaleString()} đ
               td
                 a(href=`/cart/delete/${product._id}` class="btn btn-danger") Xóa 
@@ -39,3 +41,4 @@ block main
 
       form(action="/checkout", method="POST")
         button.btn.btn-success.mt-3(type="submit") Thanh toán
+  script(src="/js/cart.js")
