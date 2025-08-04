@@ -1,0 +1,61 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  +alert-success()
+  +alert-error()
+  
+  .container.my-5
+    .row
+      .col-md-8
+        h2.mb-4 Thông tin thanh toán
+        form(action="/checkout/order", method="POST")
+          .mb-3
+            label.form-label(for="fullName") Họ và tên
+            input.form-control(
+              type="text", 
+              id="fullName", 
+              name="fullName", 
+              required
+            )
+          
+          .mb-3
+            label.form-label(for="phone") Số điện thoại
+            input.form-control(
+              type="tel", 
+              id="phone", 
+              name="phone", 
+              required
+            )
+          
+          .mb-3
+            label.form-label(for="address") Địa chỉ giao hàng
+            textarea.form-control(
+              id="address", 
+              name="address", 
+              rows="3", 
+              required
+            )
+
+          button.btn.btn-primary.btn-lg(type="submit") Đặt hàng
+
+      .col-md-4
+        .card
+          .card-header
+            h5.card-title Đơn hàng của bạn
+          .card-body
+            each product in products
+              .d-flex.mb-3
+                img(
+                  src=`/${product.thumbnail}`, 
+                  style="width: 60px; height: 60px; object-fit: cover; margin-right: 10px;"
+                )
+                div
+                  h6.mb-1= product.title
+                  small.text-muted #{product.quantity} x #{product.newPrice.toLocaleString()}đ
+                  p.mb-0 Thành tiền: #{product.total.toLocaleString()}đ
+              hr
+            
+            .d-flex.justify-content-between
+              h5 Tổng cộng:
+              h5.text-danger= `${totalAmount.toLocaleString()}đ`

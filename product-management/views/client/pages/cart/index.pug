@@ -39,6 +39,6 @@ block main
       h4.text-end Tổng tiền: 
         span.text-danger.ms-2 #{totalAmount.toLocaleString()} đ
 
-      form(action="/checkout", method="POST")
+      form(action="/checkout", method="GET")
         button.btn.btn-success.mt-3(type="submit") Thanh toán
   script(src="/js/cart.js")
