@@ -5,7 +5,7 @@ header.main-header
         .inner-logo
           a(href='/')
             img(src="/images/logo.png", alt="Logo", class="logo-img")
-      .col-4 
+      .col-2
         .inner-search.ms-4
           form(action="/search" method="GET")
             .input-group
@@ -18,7 +18,7 @@ header.main-header
               button.btn.btn-outline-secondary(type="submit")
                 i.fas.fa-search
       
-      .col-6.d-flex.justify-content-start
+      .col-8.d-flex.justify-content-start
         .inner-menu
           ul
             li
@@ -41,4 +41,9 @@ header.main-header
             li
               a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart.quantityTotal : 0}) 
             li
-              a(href='/post') Bài viết
+              a(href="/order" ) Đơn hàng
+              
+            li
+              a(href='/user/register') Đăng ký
+            li
+              a(href='/user/login') Đăng nhập

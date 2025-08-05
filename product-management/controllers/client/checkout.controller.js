@@ -115,7 +115,7 @@ module.exports.order = async (req, res) => {
     await newOrder.save();
     await Cart.updateOne({ _id: cartId }, { $set: { products: [] } });
     req.flash("success", "Đặt hàng thành công! Cảm ơn bạn đã mua sắm");
-    return res.redirect("/checkout/order-success");
+    return res.redirect(`/checkout/order-success/${newOrder._id}`);
   } catch (error) {
     console.error("Lỗi khi đặt hàng:", error);
     req.flash("error", "Có lỗi xảy ra khi đặt hàng");
@@ -123,9 +123,48 @@ module.exports.order = async (req, res) => {
   }
 };
 
-// [GET] /checkout/order-success
+// [GET] /checkout/order-success/:orderId
 module.exports.orderSuccess = async (req, res) => {
-  res.render("client/pages/checkout/success", {
-    pageTitle: "Đặt hàng thành công",
-  });
+  try {
+    const order = await Order.findById(req.params.orderId);
+
+    if (!order) {
+      req.flash("error", "Không tìm thấy đơn hàng");
+      return res.redirect("/");
+    }
+
+    const productsWithInfo = await Promise.all(
+      order.products.map(async (item) => {
+        const product = await Product.findById(item.product_id).select(
+          "title thumbnail"
+        );
+
+        const newPrice = Math.round(
+          (item.price * (100 - item.discountPercentage)) / 100
+        );
+
+        return {
+          title: product?.title || "Sản phẩm đã bị xóa",
+          thumbnail: product?.thumbnail || "/images/no-image.png",
+          quantity: item.quantity,
+          newPrice,
+          total: newPrice * item.quantity,
+        };
+      })
+    );
+    const totalAmount = order.products.reduce((sum, p) => {
+      const discountedPrice = p.price * (1 - p.discountPercentage / 100);
+      return sum + discountedPrice * p.quantity;
+    }, 0);
+    res.render("client/pages/checkout/success", {
+      pageTitle: "Đặt hàng thành công",
+      order,
+      products: productsWithInfo,
+      totalAmount,
+    });
+  } catch (err) {
+    console.error("Lỗi khi hiển thị trang đặt hàng thành công:", err);
+    req.flash("error", "Không thể hiển thị đơn hàng");
+    return res.redirect("/");
+  }
 };

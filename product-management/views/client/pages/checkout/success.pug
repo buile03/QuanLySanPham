@@ -1,10 +1,51 @@
 extends ../../layouts/default
-
+include ../../mixins/alert
 block main
+  +alert-success()
   .container.my-5
-    .text-center.py-5
-      i.bi.bi-check-circle-fill.text-success(style="font-size: 5rem;")
-      h1.mt-4 Đặt hàng thành công!
-      p.lead Cảm ơn bạn đã mua sắm tại cửa hàng chúng tôi
-      p Nhân viên sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng.
-      a.btn.btn-primary(href="/") Tiếp tục mua sắm
+    h2.text-success.text-center.mb-4 Đặt hàng thành công!
+
+    .card.mb-4
+      .card-body
+        h4 Thông tin đơn hàng
+        p
+          strong Họ tên: 
+          | #{order.userInfo.fullName}
+        p
+          strong Số điện thoại: 
+          | #{order.userInfo.phone}
+        p
+          strong Địa chỉ: 
+          | #{order.userInfo.address}
+        
+        p
+          strong Mã đơn hàng: 
+          | #{order._id}
+        p
+          strong Ngày đặt hàng: 
+          | #{order.createdAt.toLocaleString()}
+
+    h4.mb-3 Danh sách sản phẩm
+
+    table.table.table-bordered
+      thead
+        tr
+          th STT
+          th Ảnh
+          th Tên sản phẩm
+          th Số lượng
+          th Giá
+          th Thành tiền
+      tbody
+        each item, index in products
+          tr
+            td #{index + 1}
+            td 
+              img(src=item.thumbnail, alt="Ảnh", style="width: 60px; height: 60px; object-fit: cover;")
+            td #{item.title}
+            td #{item.quantity}
+            td #{item.newPrice.toLocaleString()} đ
+            td #{item.total.toLocaleString()} đ
+
+    .text-center.mt-4
+      a.btn.btn-primary(href="/product") Tiếp tục mua sắm

@@ -1,4 +1,5 @@
 extends ../../layouts/default.pug
-
+include ../../mixins/alert
 block main
-    h1 Trang Chủ
+  +alert-success()
+  h1 Trang Chủ

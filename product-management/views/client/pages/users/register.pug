@@ -1,0 +1,21 @@
+extends ../../layouts/default
+include ../../mixins/alert
+block main
+  +alert-error()
+  .container.mt-5
+    h2.text-center.mb-4 Đăng ký tài khoản
+
+    form(method="POST", action="/user/register")
+      .mb-3
+        label.form-label(for="fullName") Họ và tên
+        input.form-control(type="text", id="fullName", name="fullName", required)
+
+      .mb-3
+        label.form-label(for="email") Email
+        input.form-control(type="email", id="email", name="email", required)
+
+      .mb-3
+        label.form-label(for="password") Mật khẩu
+        input.form-control(type="password", id="password", name="password", required)
+
+      button.btn.btn-primary(type="submit") Đăng ký
