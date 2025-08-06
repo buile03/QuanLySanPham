@@ -1,6 +1,7 @@
 const express = require("express");
 const clientCategoriesMiddleware = require("../../middleware/admin/client-categories.middleware");
 const cartMiddleware = require("../../middleware/clients/cart.middleware");
+const userMiddleware = require("../../middleware/clients/user.middleware");
 const router = express.Router();
 const homeRouter = require("./home.router");
 const productRouter = require("./product.router");
@@ -12,6 +13,7 @@ const userRouter = require("./user.router");
 // Áp dụng middleware lấy danh mục cho tất cả routes client
 router.use(clientCategoriesMiddleware);
 router.use(cartMiddleware.cartId);
+router.use(userMiddleware.infoUser);
 
 router.use("/", homeRouter);
 router.use("/product", productRouter);

@@ -5,19 +5,20 @@ header.main-header
         .inner-logo
           a(href='/')
             img(src="/images/logo.png", alt="Logo", class="logo-img")
+      
       .col-2
         .inner-search.ms-4
-          form(action="/search" method="GET")
+          form(action="/search", method="GET")
             .input-group
               input.form-control(
-                type="text" 
-                name="keyword" 
-                placeholder="Tìm kiếm..."
+                type="text",
+                name="keyword",
+                placeholder="Tìm kiếm...",
                 aria-label="Tìm kiếm"
               )
               button.btn.btn-outline-secondary(type="submit")
                 i.fas.fa-search
-      
+
       .col-8.d-flex.justify-content-start
         .inner-menu
           ul
@@ -39,11 +40,32 @@ header.main-header
                   li
                     a(href='/product') Tất cả sản phẩm
             li
-              a(href="/cart" ) Giỏ hàng (#{miniCart ? miniCart.quantityTotal : 0}) 
+              a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.quantityTotal : 0}) 
             li
-              a(href="/order" ) Đơn hàng
-              
-            li
-              a(href='/user/register') Đăng ký
-            li
-              a(href='/user/login') Đăng nhập
+              a(href="/order") Đơn hàng
+
+            if user
+              li.dropdown
+                a(href="#")
+                  if user.avatar
+                    img.rounded-circle.me-1(src=`${user.avatar}`, alt="Avatar", width="24", height="24")
+                  else
+                    i.fas.fa-user-circle.me-1
+                  | #{user.fullName}
+                ul.dropdown-menu
+                  li
+                    a(href="/user/info") Thông tin cá nhân
+                  li
+                    a(href="/order") Đơn hàng của tôi
+                  li
+                    a(href="/user/change-password") Đổi mật khẩu
+                  li
+                    a(href="/user/logout") Đăng xuất
+
+            else
+              li
+                a(href='/user/register') Đăng ký
+              li
+                a(href='/user/login') Đăng nhập
+              li
+                a(href='/user/password/forgot') Quên mật khẩu

@@ -1,0 +1,32 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  +alert-error()
+  .container.mt-5
+    h2.text-center.mb-4 Đặt lại mật khẩu
+
+    form(method="POST", action="/user/password/reset")
+      input(type="hidden", name="email", value=email)
+
+      .mb-3
+        label.form-label(for="password") Mật khẩu mới
+        input.form-control(
+          type="password",
+          id="password",
+          name="password",
+          required,
+          placeholder="Nhập mật khẩu mới"
+        )
+
+      .mb-3
+        label.form-label(for="confirmPassword") Xác nhận mật khẩu
+        input.form-control(
+          type="password",
+          id="confirmPassword",
+          name="confirmPassword",
+          required,
+          placeholder="Nhập lại mật khẩu"
+        )
+
+      button.btn.btn-primary(type="submit") Xác nhận

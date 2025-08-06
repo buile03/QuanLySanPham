@@ -1,0 +1,30 @@
+extends ../../layouts/default
+include ../../mixins/alert
+
+block main
+  +alert-error()
+  .container.mt-5
+    h2.text-center.mb-4 Nhập mã OTP
+
+    form(method="POST", action="/user/password/otp")
+      .mb-3
+        label.form-label(for="email") Email
+        input.form-control(
+          type="email",
+          id="email",
+          name="email",
+          value=email,
+          readonly,
+          required
+        )
+
+      .mb-3
+        label.form-label(for="otp") Mã OTP
+        input.form-control(
+          type="text",
+          id="otp",
+          name="otp",
+          required,
+        )
+
+      button.btn.btn-primary(type="submit") Xác nhận
