@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+const Cart = require("../../models/cart.model");
 const bcrypt = require("bcrypt");
 
 const ForgotPassword = require("../../models/forgotpassword.model");
@@ -49,17 +50,15 @@ module.exports.login = (req, res) => {
     pageTitle: "Đăng nhập",
   });
 };
-
 // [POST] /user/login
 module.exports.loginPost = async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
     const user = await User.findOne({ email, deleted: false });
+
     if (!user) {
       req.flash("error", "Email không tồn tại");
-      res.redirect("/user/login");
-      return;
+      return res.redirect("/user/login");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -70,14 +69,30 @@ module.exports.loginPost = async (req, res) => {
 
     if (user.status === "inactive") {
       req.flash("error", "Tài khoản đã bị khóa");
-      res.redirect("/user/login");
-      return;
+      return res.redirect("/user/login");
     }
 
-    // Đặt cookie token (ghi đúng tên)
+    // Gán token đăng nhập
     res.cookie("tokenUser", user.token);
 
-    // Thông báo thành công và redirect
+    const cookieCartId = req.cookies.cartId;
+
+    if (cookieCartId) {
+      // Trường hợp đã có giỏ hàng tạm → gán vào user
+      await Cart.updateOne({ _id: cookieCartId }, { user_Id: user._id });
+    } else {
+      // Không có cartId (người dùng đã từng login hoặc xóa cookie)
+      // Kiểm tra xem người dùng đã có giỏ hay chưa
+      let userCart = await Cart.findOne({ user_Id: user._id });
+      if (!userCart) {
+        // Nếu chưa có → tạo mới giỏ
+        userCart = new Cart({ user_Id: user._id, products: [] });
+        await userCart.save();
+      }
+
+      res.cookie("cartId", userCart._id.toString());
+    }
+
     req.flash("success", "Đăng nhập thành công");
     res.redirect("/");
   } catch (error) {
@@ -241,5 +256,48 @@ module.exports.resetPost = async (req, res) => {
     console.error("Lỗi reset mật khẩu:", error);
     req.flash("error", "Có lỗi xảy ra, vui lòng thử lại sau.");
     res.redirect("/user/password/reset");
+  }
+};
+
+//[GET] user/password/reset
+module.exports.info = (req, res) => {
+  res.render("client/pages/users/info", {
+    pageTitle: "Thông tin cá nhân",
+  });
+};
+
+module.exports.edit = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      req.flash("error", "Không tìm thấy người dùng");
+      res.redirect("/login");
+    }
+
+    res.render("client/pages/users/edit", {
+      pageTitle: "Chỉnh sửa thông tin cá nhân",
+      user,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin người dùng:", error);
+    res.status(500).send("Lỗi server.");
+  }
+};
+
+module.exports.editPost = async (req, res) => {
+  try {
+    const { fullName, email, phone, address } = req.body;
+
+    await User.findByIdAndUpdate(req.params.id, {
+      fullName,
+      email,
+      phone,
+      address,
+    });
+
+    res.redirect("/user/info");
+  } catch (error) {
+    console.error("Lỗi khi cập nhật người dùng:", error);
+    res.status(500).send("Lỗi server.");
   }
 };

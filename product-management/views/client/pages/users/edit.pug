@@ -1,0 +1,26 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-5
+    h2.mb-4.text-center.text-primary Chỉnh sửa thông tin
+
+    form(method="POST", action=`/user/edit/${user._id}`)
+      .mb-3
+        label.form-label(for="fullName") Họ và tên
+        input.form-control(type="text", name="fullName", value=user.fullName required)
+
+      .mb-3
+        label.form-label(for="email") Email
+        input.form-control(type="email", name="email", value=user.email required)
+
+      .mb-3
+        label.form-label(for="phone") Số điện thoại
+        input.form-control(type="text", name="phone", value=user.phone)
+
+      .mb-3
+        label.form-label(for="address") Địa chỉ
+        input.form-control(type="text", name="address", value=user.address)
+
+
+      button.btn.btn-primary(type="submit") Cập nhật
+      a.btn.btn-secondary.ms-2(href="/users/info") Hủy

@@ -1,0 +1,46 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-5
+    h2.mb-4.text-center.text-primary Thông tin cá nhân
+
+    if (user)
+      .card.shadow-lg.rounded-4
+        .row.g-0
+          .col-md-4.bg-light.p-4.d-flex.flex-column.align-items-center.justify-content-center
+            if (user.avatar)
+              img.rounded-circle.shadow(src=user.avatar, alt=user.fullName, width="150", height="150")
+            else
+              img.rounded-circle.shadow(src="/images/default-avatar.jpg", alt="Default avatar", width="150", height="150")
+            h4.mt-3= user.fullName
+
+          .col-md-8.p-4
+            table.table.table-borderless.mb-4
+              tbody
+                tr
+                  th.text-muted(scope="row") Email
+                  td= user.email
+                tr
+                  th.text-muted(scope="row") Số điện thoại
+                  td= user.phone || 'Chưa cập nhật'
+                tr
+                  th.text-muted(scope="row") Địa chỉ
+                  td= user.address || 'Chưa cập nhật'
+                tr
+                  th.text-muted(scope="row") Trạng thái
+                  td
+                    if (user.status === "active")
+                      span.badge.bg-success.px-3.py-2.shadow-sm.rounded-pill Hoạt động
+                    else
+                      span.badge.bg-danger.px-3.py-2.shadow-sm.rounded-pill Không hoạt động
+
+            .d-flex.justify-content-end.gap-3
+              a.btn.btn-outline-primary(href=`/user/edit/${user._id}`) 
+                i.fas.fa-edit.me-1
+                | Chỉnh sửa thông tin
+              a.btn.btn-secondary(href="/") 
+                i.fas.fa-arrow-left.me-1
+                | Quay lại
+
+    else
+      .alert.alert-warning.text-center Không tìm thấy thông tin người dùng
