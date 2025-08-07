@@ -61,7 +61,13 @@ app.use(
 // Cấu hình router cho client và admin
 app.use("/", routerClient);
 app.use(systemConfig.prefixAdmin, routerAdmin); // Sử dụng prefixAdmin từ config
+app.use((req, res) => {
+  res.status(404).render("client/pages/errors/404", {
+    pageTitle: "404 Not Found",
+  });
+});
 app.locals.dayjs = dayjs;
+
 // Khởi động server
 if (require.main === module) {
   app.listen(port, () => {

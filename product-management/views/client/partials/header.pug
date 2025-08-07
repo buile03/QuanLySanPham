@@ -4,7 +4,10 @@ header.main-header
       .col-2
         .inner-logo
           a(href='/')
-            img(src=`/uploads/${settingGeneral.logo}`, alt=settingGeneral.websiteName, class="logo-img")
+            if settingGeneral.logo
+              img(src=`/uploads/${settingGeneral.logo}`, alt=settingGeneral.websiteName, class="logo-img")
+            else
+              img(src='/images/default-logo.png', alt='Logo mặc định', class="logo-img")
 
       
       .col-2
