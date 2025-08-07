@@ -3,28 +3,252 @@ extends ../../layouts/default
 block main
   .container-fluid
     h2.mb-4.text-primary Trang tổng quan
+    
+    .row.mb-4
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-primary.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-primary.text-uppercase.mb-1 Tổng sản phẩm
+                .h5.mb-0.font-weight-bold.text-gray-800 #{statics.product.total}
+                small.text-success #{statics.product.active} đang hoạt động
+                br
+                small.text-warning #{statics.product.inactive} ngừng bán
+              .col-auto
+                i.fas.fa-box.fa-2x.text-gray-300
+      
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-success.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-success.text-uppercase.mb-1 Danh mục
+                .h5.mb-0.font-weight-bold.text-gray-800 #{statics.category.total}
+                small.text-success #{statics.category.active} đang hoạt động
+                br
+                small.text-warning #{statics.category.inactive} tạm ẩn
+              .col-auto
+                i.fas.fa-tags.fa-2x.text-gray-300
+      
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-info.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-info.text-uppercase.mb-1 Tổng Users
+                .h5.mb-0.font-weight-bold.text-gray-800 #{statics.user.total}
+                small.text-success #{statics.user.active} đang hoạt động
+                br
+                small.text-warning #{statics.user.inactive} không hoạt động
+              .col-auto
+                i.fas.fa-users.fa-2x.text-gray-300
+      
+      .col-xl-3.col-md-6.mb-4
+        .card.border-left-warning.shadow.h-100.py-2
+          .card-body
+            .row.no-gutters.align-items-center
+              .col.mr-2
+                .text-xs.font-weight-bold.text-warning.text-uppercase.mb-1 Admins
+                .h5.mb-0.font-weight-bold.text-gray-800 #{statics.account.admin}
+                small.text-muted #{statics.account.user} user thường
+                br
+                small.text-muted #{statics.role.total} vai trò
+              .col-auto
+                i.fas.fa-user-shield.fa-2x.text-gray-300
+
+    // Các phần khác giữ nguyên như trong template của bạn
+    .row.mb-4
+      .col-lg-6.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Thống kê tài khoản User
+          .card-body
+            .row
+              .col-sm-6.mb-3
+                .card.bg-success.text-white.shadow
+                  .card-body
+                    .d-flex.justify-content-between.align-items-center
+                      div
+                        i.fas.fa-user-check.fa-2x
+                        .h6.mb-0.mt-2 Đang hoạt động
+                      .display-4 #{statics.user.active}
+              .col-sm-6.mb-3
+                .card.bg-warning.text-white.shadow
+                  .card-body
+                    .d-flex.justify-content-between.align-items-center
+                      div
+                        i.fas.fa-user-clock.fa-2x
+                        .h6.mb-0.mt-2 Chưa kích hoạt
+                      .display-4 #{statics.user.inactive}
+              .col-sm-6.mb-3
+                .card.bg-danger.text-white.shadow
+                  .card-body
+                    .d-flex.justify-content-between.align-items-center
+                      div
+                        i.fas.fa-user-lock.fa-2x
+                        .h6.mb-0.mt-2 Bị khóa
+                      .display-4 0
+      .col-lg-6.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Thống kê sản phẩm theo danh mục
+          .card-body
+            .table-responsive
+              table.table.table-bordered
+                thead
+                  tr
+                    th Danh mục
+                    th Số lượng
+                    th Trạng thái
+                tbody
+                  tr
+                    td Điện thoại
+                    td 342
+                    td
+                      span.badge.badge-success Hoạt động
+                  tr
+                    td Laptop
+                    td 156
+                    td
+                      span.badge.badge-success Hoạt động
+                  tr
+                    td Tablet
+                    td 89
+                    td
+                      span.badge.badge-success Hoạt động
+                  tr
+                    td Phụ kiện
+                    td 420
+                    td
+                      span.badge.badge-success Hoạt động
+                  tr
+                    td Đồng hồ
+                    td 240
+                    td
+                      span.badge.badge-warning Tạm dừng
+
+    .row.mb-4
+      .col-lg-12.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3.d-flex.flex-row.align-items-center.justify-content-between
+            h6.m-0.font-weight-bold.text-primary Hoạt động gần đây
+            .dropdown.no-arrow
+              a.dropdown-toggle(href="#" role="button" data-toggle="dropdown")
+                i.fas.fa-ellipsis-v.fa-sm.fa-fw.text-gray-400
+              .dropdown-menu.dropdown-menu-right.shadow.animated--fade-in
+                .dropdown-header Tùy chọn:
+                a.dropdown-item(href="#") Xem chi tiết
+                a.dropdown-item(href="#") Xuất báo cáo
+                .dropdown-divider
+                a.dropdown-item(href="#") Làm mới
+          .card-body
+            .table-responsive
+              table.table.table-hover
+                thead.thead-light
+                  tr
+                    th #
+                    th Hoạt động
+                    th Người thực hiện
+                    th Thời gian
+                    th Trạng thái
+                tbody
+                  tr
+                    td 1
+                    td Thêm sản phẩm mới "iPhone 15 Pro"
+                    td Admin Nguyễn Văn A
+                    td 2 phút trước
+                    td
+                      span.badge.badge-success Thành công
+                  tr
+                    td 2
+                    td Cập nhật thông tin user ID: 3524
+                    td Admin Trần Thị B
+                    td 15 phút trước
+                    td
+                      span.badge.badge-success Thành công
+                  tr
+                    td 3
+                    td Khóa tài khoản user ID: 2341
+                    td Admin Lê Văn C
+                    td 1 giờ trước
+                    td
+                      span.badge.badge-warning Đang xử lý
+                  tr
+                    td 4
+                    td Thêm danh mục "Tai nghe Gaming"
+                    td Admin Nguyễn Văn A
+                    td 2 giờ trước
+                    td
+                      span.badge.badge-success Thành công
+                  tr
+                    td 5
+                    td Xóa sản phẩm "Samsung Galaxy S20"
+                    td Admin Phạm Thị D
+                    td 3 giờ trước
+                    td
+                      span.badge.badge-danger Đã xóa
+
     .row
-      .col-md-3.mb-4
-        .card.shadow-sm.border-0
-          .card-body.text-center
-            i.fas.fa-box fa-2x.text-primary.mb-2
-            h5.mb-0 Sản phẩm
-            p.text-muted.mb-0 Tổng số sản phẩm
-      .col-md-3.mb-4
-        .card.shadow-sm.border-0
-          .card-body.text-center
-            i.fas.fa-th-list fa-2x.text-success.mb-2
-            h5.mb-0 Danh mục
-            p.text-muted.mb-0 Tổng số danh mục
-      .col-md-3.mb-4
-        .card.shadow-sm.border-0
-          .card-body.text-center
-            i.fas.fa-users fa-2x.text-info.mb-2
-            h5.mb-0 Tài khoản
-            p.text-muted.mb-0 Tổng số tài khoản
-      .col-md-3.mb-4
-        .card.shadow-sm.border-0
-          .card-body.text-center
-            i.fas.fa-user-shield fa-2x.text-warning.mb-2
-            h5.mb-0 Quyền
-            p.text-muted.mb-0 Tổng số quyền
+      .col-lg-6.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Tăng trưởng người dùng (30 ngày)
+          .card-body
+            .progress.mb-2
+              .progress-bar.bg-success(role="progressbar" style="width: 85%")
+            .text-center
+              span.text-success +285 người dùng mới
+              br
+              small.text-muted Tăng 12.5% so với tháng trước
+
+      .col-lg-6.mb-4
+        .card.shadow.mb-4
+          .card-header.py-3
+            h6.m-0.font-weight-bold.text-primary Sản phẩm bán chạy nhất
+          .card-body
+            ul.list-group.list-group-flush
+              li.list-group-item.d-flex.justify-content-between.align-items-center
+                | iPhone 15 Pro Max
+                span.badge.badge-primary.badge-pill 234 lượt xem
+              li.list-group-item.d-flex.justify-content-between.align-items-center
+                | MacBook Pro M3
+                span.badge.badge-primary.badge-pill 189 lượt xem
+              li.list-group-item.d-flex.justify-content-between.align-items-center
+                | AirPods Pro 2
+                span.badge.badge-primary.badge-pill 156 lượt xem
+              li.list-group-item.d-flex.justify-content-between.align-items-center
+                | iPad Pro 12.9"
+                span.badge.badge-primary.badge-pill 142 lượt xem
+
+  style.
+    .border-left-primary {
+      border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-success {
+      border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-left-info {
+      border-left: 0.25rem solid #36b9cc !important;
+    }
+    .border-left-warning {
+      border-left: 0.25rem solid #f6c23e !important;
+    }
+    .text-xs {
+      font-size: 0.7rem;
+    }
+    .card-body-icon {
+      position: absolute;
+      z-index: 0;
+      top: -25px;
+      right: -25px;
+      font-size: 5rem;
+      -webkit-transform: rotate(15deg);
+      -ms-transform: rotate(15deg);
+      transform: rotate(15deg);
+    }
+    .display-4 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      line-height: 1.2;
+    }

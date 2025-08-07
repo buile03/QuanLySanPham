@@ -10,6 +10,7 @@ const roleRouter = require("./role.router");
 const accountRouter = require("./account.router");
 const authRouter = require("./auth.router");
 const myAccountRouter = require("./my-account.router");
+const settingRouter = require("./setting.router");
 
 router.use("/dashboard", authMiddleware.requireAuth, dashboardRouter);
 router.use("/products", authMiddleware.requireAuth, productRouter);
@@ -22,4 +23,5 @@ router.use("/roles", authMiddleware.requireAuth, roleRouter);
 router.use("/accounts", authMiddleware.requireAuth, accountRouter);
 router.use("/auth", authRouter);
 router.use("/my-account", authMiddleware.requireAuth, myAccountRouter);
+router.use("/settings", settingRouter);
 module.exports = router;
